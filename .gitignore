@@ -1,5 +1,9 @@
 node_modules/
 dist/
+
+# Saved webpages / browser downloads in TopshelfStuff
+TopshelfStuff/github_files/
+TopshelfStuff/*.htm
 *.db
 *.db-shm
 *.db-wal

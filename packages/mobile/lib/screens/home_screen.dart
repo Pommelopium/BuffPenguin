@@ -1,7 +1,13 @@
+// home_screen.dart — Main home screen.
+// Shows a "Start Workout" button when no session is active, or a banner
+// linking back to the active session when one is in progress.
+// Also displays a scrollable list of recent sessions for quick access
+// to the history detail screen.
+
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart'; // external: Riverpod state management
+import 'package:go_router/go_router.dart';               // external: GoRouter navigation
+import 'package:intl/intl.dart';                         // external: intl date formatting
 import '../providers/session_provider.dart';
 import '../providers/server_provider.dart';
 
@@ -10,8 +16,8 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final activeSession = ref.watch(activeSessionProvider);
-    final history = ref.watch(sessionHistoryProvider);
+    final activeSession = ref.watch(activeSessionProvider);   // non-null while a workout is running
+    final history = ref.watch(sessionHistoryProvider);        // AsyncValue<List<WorkoutSession>>
     final serverUrl = ref.watch(serverUrlProvider);
 
     return Scaffold(
@@ -22,12 +28,14 @@ class HomeScreen extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.settings, color: Colors.white54),
-            onPressed: () => context.push('/settings'),
+            onPressed: () => context.push('/settings'), // external: GoRouter push
           ),
         ],
       ),
       body: Column(
         children: [
+          // Show the active session banner if a workout is ongoing,
+          // otherwise show the "Start Workout" button.
           if (activeSession != null)
             _ActiveSessionBanner(session: activeSession)
           else
@@ -59,6 +67,8 @@ class HomeScreen extends ConsumerWidget {
               ),
             ),
           ),
+          // Session history list — uses Riverpod's AsyncValue.when to handle
+          // loading/error/data states declaratively.
           Expanded(
             child: history.when(
               loading: () => const Center(child: CircularProgressIndicator(color: Colors.white)),
@@ -73,6 +83,7 @@ class HomeScreen extends ConsumerWidget {
                       itemCount: sessions.length,
                       itemBuilder: (context, index) {
                         final s = sessions[index];
+                        // external: intl DateFormat — formats Unix timestamp to human-readable string
                         final date = DateFormat('EEE, MMM d – HH:mm').format(s.startedAtDate);
                         return ListTile(
                           title: Text(date, style: const TextStyle(color: Colors.white)),
@@ -80,7 +91,7 @@ class HomeScreen extends ConsumerWidget {
                               ? Text(s.notes!, style: const TextStyle(color: Colors.white54))
                               : null,
                           trailing: const Icon(Icons.chevron_right, color: Colors.white24),
-                          onTap: () => context.push('/history/${s.id}'),
+                          onTap: () => context.push('/history/${s.id}'), // external: GoRouter push
                         );
                       },
                     ),
@@ -91,13 +102,15 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
+  // Calls POST /sessions on the backend, stores the new session in
+  // activeSessionProvider, then navigates to the log set screen.
   Future<void> _startSession(BuildContext context, WidgetRef ref) async {
     final client = ref.read(apiClientProvider);
     if (client == null) return;
     try {
-      final session = await client.startSession();
+      final session = await client.startSession(); // external: POST /api/v1/sessions
       ref.read(activeSessionProvider.notifier).state = session;
-      if (context.mounted) context.push('/log/${session.id}');
+      if (context.mounted) context.push('/log/${session.id}'); // external: GoRouter push
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -108,6 +121,8 @@ class HomeScreen extends ConsumerWidget {
   }
 }
 
+// Banner shown at the top of the home screen when a workout is active.
+// Provides a "Resume" button that goes back to the log set screen.
 class _ActiveSessionBanner extends ConsumerWidget {
   final session;
   const _ActiveSessionBanner({required this.session});
@@ -115,7 +130,7 @@ class _ActiveSessionBanner extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-      color: const Color(0xFF1A2A1A),
+      color: const Color(0xFF1A2A1A), // dark green tint to signal active state
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         children: [
@@ -128,7 +143,7 @@ class _ActiveSessionBanner extends ConsumerWidget {
             ),
           ),
           TextButton(
-            onPressed: () => context.push('/log/${session.id}'),
+            onPressed: () => context.push('/log/${session.id}'), // external: GoRouter push
             child: const Text('Resume', style: TextStyle(color: Color(0xFF00FF88))),
           ),
         ],

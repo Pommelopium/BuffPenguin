@@ -1,6 +1,11 @@
+// discovery_screen.dart — Server discovery screen.
+// The first screen shown after launch. Runs automatic mDNS discovery via
+// serverDiscoveryProvider and navigates to /home as soon as a server is found.
+// If discovery fails or times out, the user can type the server IP manually.
+
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart'; // external: Riverpod state management
+import 'package:go_router/go_router.dart';               // external: GoRouter navigation
 import '../providers/server_provider.dart';
 import '../services/discovery_service.dart';
 
@@ -13,8 +18,8 @@ class DiscoveryScreen extends ConsumerStatefulWidget {
 
 class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
   final _manualController = TextEditingController(text: 'http://');
-  bool _isChecking = false;
-  String? _error;
+  bool _isChecking = false; // true while the manual URL is being verified
+  String? _error;           // shown below the text field on failed connect attempt
 
   @override
   void dispose() {
@@ -22,6 +27,8 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
     super.dispose();
   }
 
+  // Validates the manually entered URL by calling /health, then saves it
+  // and navigates to /home if the server responds correctly.
   Future<void> _connectManual() async {
     final url = _manualController.text.trim();
     if (url.isEmpty) return;
@@ -30,15 +37,16 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
     final discovery = ref.read(discoveryServiceProvider);
     final client = ref.read(apiClientProvider.notifier);
 
-    // Verify the URL is reachable
+    // Verify the entered URL responds with status:"ok" before committing to it.
     final apiClient = ref.read(apiClientProvider);
-    final ok = await (apiClient?.checkHealth(url) ?? Future.value(false));
+    final ok = await (apiClient?.checkHealth(url) ?? Future.value(false)); // external: HTTP GET /health
 
     if (!mounted) return;
     if (ok) {
-      await discovery.saveManualUrl(url);
+      // Persist the URL so it's tried first on the next app launch.
+      await discovery.saveManualUrl(url); // external: writes to SharedPreferences
       ref.read(serverUrlProvider.notifier).state = url;
-      if (mounted) context.go('/home');
+      if (mounted) context.go('/home'); // external: GoRouter navigation
     } else {
       setState(() {
         _isChecking = false;
@@ -49,11 +57,13 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final discovery = ref.watch(serverDiscoveryProvider);
+    // Watch the automatic discovery future — drives the loading/found/not-found UI.
+    final discovery = ref.watch(serverDiscoveryProvider); // external: Riverpod FutureProvider
 
-    // Auto-navigate when discovery succeeds
-    ref.listen(serverDiscoveryProvider, (_, next) {
-      if (next.value != null && mounted) context.go('/home');
+    // When automatic discovery succeeds, navigate immediately without waiting
+    // for the user to do anything.
+    ref.listen(serverDiscoveryProvider, (_, next) { // external: Riverpod side-effect listener
+      if (next.value != null && mounted) context.go('/home'); // external: GoRouter navigation
     });
 
     return Scaffold(
@@ -78,6 +88,9 @@ class _DiscoveryScreenState extends ConsumerState<DiscoveryScreen> {
                 style: TextStyle(color: Colors.white54),
               ),
               const SizedBox(height: 32),
+              // Show a spinner while mDNS scan is running, a failure message
+              // if it completes without finding a server, or nothing if found
+              // (navigation happens immediately via the ref.listen above).
               discovery.when(
                 loading: () => const CircularProgressIndicator(color: Colors.white),
                 data: (url) => url == null
