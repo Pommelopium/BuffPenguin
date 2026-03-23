@@ -1,0 +1,6 @@
+{
+  "name": "MMM-BuffPenguin",
+  "version": "1.0.0",
+  "description": "MagicMirror² module to display muscle group training freshness",
+  "main": "MMM-BuffPenguin.js"
+}

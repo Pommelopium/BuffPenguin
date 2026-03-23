@@ -1,0 +1,19 @@
+{
+  "name": "buffpenguin",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/backend",
+    "packages/mirror-module"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace=packages/backend",
+    "dev": "npm run dev --workspace=packages/backend",
+    "lint": "npm run lint --workspaces --if-present"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "@types/node": "^20.0.0",
+    "eslint": "^9.0.0"
+  }
+}

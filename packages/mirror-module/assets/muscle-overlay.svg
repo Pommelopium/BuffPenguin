@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  muscle-overlay.svg — BuffPenguin mirror display
+  ================================================
+  This SVG has TWO layers:
+    1. "silhouette"     — grey body outline (background reference)
+    2. "muscle-regions" — colored overlay regions, one <path> per muscle group
+
+  Each muscle-region path has:
+    id="[slug]"           e.g. id="chest"
+    class="muscle-region" (required for CSS freshness coloring)
+
+  TODO: Open this file in Inkscape and draw the actual muscle region shapes.
+  The placeholder ellipses below show approximate body positions but need
+  to be replaced with accurate anatomical polygon paths.
+
+  Anterior figure occupies x: 10–110, y: 0–380
+  Posterior figure occupies x: 120–220, y: 0–380
+  Total viewBox: 0 0 230 400
+-->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 230 400"
+  version="1.1"
+>
+  <!-- ======================== -->
+  <!-- LAYER 1: Body silhouette -->
+  <!-- ======================== -->
+  <g id="silhouette" opacity="0.25" fill="#aaaaaa">
+    <!-- Anterior (front) rough silhouette -->
+    <!-- Head -->
+    <ellipse cx="60" cy="30" rx="18" ry="22"/>
+    <!-- Neck -->
+    <rect x="54" y="50" width="12" height="15"/>
+    <!-- Torso -->
+    <rect x="36" y="65" width="48" height="100" rx="6"/>
+    <!-- Left arm -->
+    <rect x="18" y="68" width="16" height="80" rx="6"/>
+    <!-- Right arm -->
+    <rect x="86" y="68" width="16" height="80" rx="6"/>
+    <!-- Hips/Pelvis -->
+    <rect x="34" y="162" width="52" height="30" rx="4"/>
+    <!-- Left leg -->
+    <rect x="34" y="190" width="22" height="120" rx="6"/>
+    <!-- Right leg -->
+    <rect x="64" y="190" width="22" height="120" rx="6"/>
+    <!-- Left calf -->
+    <rect x="36" y="308" width="18" height="60" rx="5"/>
+    <!-- Right calf -->
+    <rect x="66" y="308" width="18" height="60" rx="5"/>
+
+    <!-- Posterior (back) rough silhouette — offset x+120 -->
+    <!-- Head -->
+    <ellipse cx="180" cy="30" rx="18" ry="22"/>
+    <!-- Neck -->
+    <rect x="174" y="50" width="12" height="15"/>
+    <!-- Torso/Back -->
+    <rect x="156" y="65" width="48" height="100" rx="6"/>
+    <!-- Left arm -->
+    <rect x="138" y="68" width="16" height="80" rx="6"/>
+    <!-- Right arm -->
+    <rect x="206" y="68" width="16" height="80" rx="6"/>
+    <!-- Glutes -->
+    <rect x="154" y="162" width="52" height="40" rx="4"/>
+    <!-- Left leg (hamstrings) -->
+    <rect x="154" y="200" width="22" height="110" rx="6"/>
+    <!-- Right leg (hamstrings) -->
+    <rect x="184" y="200" width="22" height="110" rx="6"/>
+    <!-- Left calf -->
+    <rect x="156" y="308" width="18" height="60" rx="5"/>
+    <!-- Right calf -->
+    <rect x="186" y="308" width="18" height="60" rx="5"/>
+  </g>
+
+  <!-- ========================== -->
+  <!-- LAYER 2: Muscle region overlays -->
+  <!-- Each path: id=[slug], class="muscle-region" -->
+  <!-- CSS in MMM-BuffPenguin.css adds color based on freshness -->
+  <!-- ========================== -->
+  <g id="muscle-regions">
+
+    <!-- ===== ANTERIOR (FRONT) regions — x: 10–110 ===== -->
+
+    <!-- NECK -->
+    <ellipse id="neck" class="muscle-region"
+      cx="60" cy="58" rx="9" ry="8"/>
+
+    <!-- CHEST -->
+    <ellipse id="chest" class="muscle-region"
+      cx="60" cy="95" rx="20" ry="18"/>
+
+    <!-- SHOULDERS (deltoids — both sides shown anterior) -->
+    <ellipse id="shoulders" class="muscle-region"
+      cx="60" cy="75" rx="30" ry="10"/>
+
+    <!-- BICEPS (anterior upper arm) -->
+    <!-- Left bicep -->
+    <ellipse class="muscle-region" id="biceps"
+      cx="26" cy="100" rx="7" ry="18"/>
+
+    <!-- TRICEPS (visible from front as lateral arm) -->
+    <ellipse id="triceps" class="muscle-region"
+      cx="95" cy="100" rx="7" ry="18"/>
+
+    <!-- FOREARMS -->
+    <ellipse id="forearms" class="muscle-region"
+      cx="23" cy="135" rx="6" ry="14"/>
+
+    <!-- THIGHS (quadriceps, anterior) -->
+    <ellipse id="thighs" class="muscle-region"
+      cx="60" cy="230" rx="24" ry="35"/>
+
+    <!-- CALVES (anterior, tibialis) -->
+    <ellipse id="calves" class="muscle-region"
+      cx="60" cy="330" rx="18" ry="28"/>
+
+    <!-- ===== POSTERIOR (BACK) regions — x: 130–230 ===== -->
+
+    <!-- BACK (trapezius + latissimus dorsi) -->
+    <ellipse id="back" class="muscle-region"
+      cx="180" cy="110" rx="24" ry="40"/>
+
+    <!-- GLUTES -->
+    <ellipse id="glutes" class="muscle-region"
+      cx="180" cy="178" rx="24" ry="20"/>
+
+    <!-- HAMSTRINGS (posterior thigh) -->
+    <ellipse id="hamstrings" class="muscle-region"
+      cx="180" cy="240" rx="22" ry="35"/>
+
+  </g>
+
+  <!-- Label: anterior / posterior -->
+  <text x="60" y="395" text-anchor="middle" fill="#444" font-size="8" font-family="sans-serif">FRONT</text>
+  <text x="180" y="395" text-anchor="middle" fill="#444" font-size="8" font-family="sans-serif">BACK</text>
+</svg>

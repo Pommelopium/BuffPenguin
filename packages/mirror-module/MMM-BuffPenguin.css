@@ -1,0 +1,84 @@
+.MMM-BuffPenguin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #fff;
+  font-family: inherit;
+}
+
+.bp-title {
+  font-size: 1.4em;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  color: #fff;
+}
+
+.bp-loading {
+  color: #666;
+  font-size: 0.9em;
+  padding: 20px;
+}
+
+.bp-figures {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  justify-content: center;
+}
+
+/* The SVG itself */
+.bp-figures svg {
+  width: 160px;
+  height: auto;
+}
+
+/* All muscle region overlays start transparent */
+.muscle-region {
+  fill: transparent;
+  opacity: 0.7;
+  transition: fill 0.6s ease;
+}
+
+/* Freshness colour scale — high contrast for mirror visibility */
+.muscle-region.today     { fill: #00ff88; }
+.muscle-region.recent    { fill: #88ff44; }
+.muscle-region.moderate  { fill: #ffaa00; }
+.muscle-region.stale     { fill: #ff4444; }
+.muscle-region.untrained { fill: #222222; }
+
+/* Legend */
+.bp-legend {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.bp-legend-item {
+  font-size: 0.7em;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #000;
+}
+
+.bp-legend-item.today    { background: #00ff88; }
+.bp-legend-item.recent   { background: #88ff44; }
+.bp-legend-item.moderate { background: #ffaa00; }
+.bp-legend-item.stale    { background: #ff4444; color: #fff; }
+
+.bp-updated {
+  font-size: 0.65em;
+  color: #555;
+  margin-top: 8px;
+}
+
+.bp-svg-fallback {
+  background: #111;
+}
