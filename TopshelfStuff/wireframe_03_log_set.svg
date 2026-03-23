@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 940"
+     font-family="'Helvetica Neue', Arial, sans-serif">
+
+  <!-- Outer background -->
+  <rect width="420" height="940" fill="#1A1A1A"/>
+
+  <!-- Screen label -->
+  <text x="210" y="918" fill="#666" font-size="13" text-anchor="middle">3 / 5 — Log Set Screen</text>
+
+  <!-- Phone body -->
+  <rect x="5" y="5" width="410" height="890" rx="50" ry="50"
+        fill="#000" stroke="#444" stroke-width="2"/>
+
+  <!-- Dynamic island -->
+  <rect x="150" y="18" width="120" height="30" rx="15" fill="#111"/>
+
+  <!-- Status bar -->
+  <text x="35" y="42" fill="#FFF" font-size="12" font-weight="600">9:41</text>
+  <text x="385" y="42" fill="#FFF" font-size="11" text-anchor="end">● ● ▮</text>
+
+  <!-- ── APP BAR ── -->
+  <!-- Back chevron -->
+  <text x="20" y="100" fill="#FFF" font-size="20">‹</text>
+  <text x="42" y="100" fill="#FFF" font-size="18" font-weight="700">Log Sets</text>
+  <!-- Finish button (green text, right-aligned) -->
+  <text x="398" y="100" fill="#00FF88" font-size="15" font-weight="600" text-anchor="end">Finish</text>
+  <line x1="5" y1="115" x2="415" y2="115" stroke="#1C1C1C" stroke-width="1"/>
+
+  <!-- ── EXERCISE DROPDOWN ── -->
+  <rect x="20" y="126" width="380" height="56" rx="5"
+        fill="none" stroke="#333" stroke-width="1.5"/>
+  <text x="34" y="146" fill="#888" font-size="11">Exercise</text>
+  <text x="34" y="166" fill="#FFF" font-size="14">Barbell Bench Press</text>
+  <text x="390" y="158" fill="#888" font-size="16" text-anchor="end">▾</text>
+
+  <!-- ── REPS + WEIGHT ROW ── -->
+  <!-- Reps field -->
+  <rect x="20" y="196" width="182" height="56" rx="5"
+        fill="none" stroke="#333" stroke-width="1.5"/>
+  <text x="34" y="216" fill="#888" font-size="11">Reps</text>
+  <text x="34" y="238" fill="#FFF" font-size="16" font-weight="500">8</text>
+
+  <!-- Weight field -->
+  <rect x="216" y="196" width="184" height="56" rx="5"
+        fill="none" stroke="#333" stroke-width="1.5"/>
+  <text x="230" y="216" fill="#888" font-size="11">Weight (kg)</text>
+  <text x="230" y="238" fill="#FFF" font-size="16" font-weight="500">80</text>
+
+  <!-- ── BODYWEIGHT CHECKBOX ── -->
+  <rect x="20" y="268" width="22" height="22" rx="3" fill="#FFF"/>
+  <!-- Checkmark (unchecked in this state) -->
+  <text x="48" y="285" fill="#FFF" font-size="14">Bodyweight</text>
+
+  <!-- ── LOG SET BUTTON ── -->
+  <rect x="20" y="306" width="380" height="58" rx="5" fill="#00FF88"/>
+  <text x="210" y="342" fill="#000" font-size="18" font-weight="700" text-anchor="middle">Log Set</text>
+
+  <!-- ── THIS SESSION LIST ── -->
+  <text x="20" y="385" fill="#666" font-size="12" letter-spacing="0.5">THIS SESSION</text>
+
+  <!-- Set item 1 (most recent, top) -->
+  <text x="20" y="412" fill="#FFF" font-size="14">Barbell Bench Press</text>
+  <text x="398" y="412" fill="#888" font-size="13" text-anchor="end">8 reps × 80.0 kg</text>
+  <line x1="20" y1="426" x2="400" y2="426" stroke="#1C1C1C" stroke-width="1"/>
+
+  <!-- Set item 2 -->
+  <text x="20" y="452" fill="#FFF" font-size="14">Barbell Bench Press</text>
+  <text x="398" y="452" fill="#888" font-size="13" text-anchor="end">8 reps × 80.0 kg</text>
+  <line x1="20" y1="466" x2="400" y2="466" stroke="#1C1C1C" stroke-width="1"/>
+
+  <!-- Set item 3 -->
+  <text x="20" y="492" fill="#FFF" font-size="14">Overhead Press</text>
+  <text x="398" y="492" fill="#888" font-size="13" text-anchor="end">10 reps × 55.0 kg</text>
+  <line x1="20" y1="506" x2="400" y2="506" stroke="#1C1C1C" stroke-width="1"/>
+
+  <!-- Set item 4 -->
+  <text x="20" y="532" fill="#FFF" font-size="14">Overhead Press</text>
+  <text x="398" y="532" fill="#888" font-size="13" text-anchor="end">10 reps × 55.0 kg</text>
+  <line x1="20" y1="546" x2="400" y2="546" stroke="#1C1C1C" stroke-width="1"/>
+
+  <!-- Home indicator -->
+  <rect x="160" y="862" width="100" height="5" rx="2.5" fill="#333"/>
+</svg>
