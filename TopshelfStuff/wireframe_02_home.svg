@@ -56,7 +56,7 @@
 
   <!-- Item 2 -->
   <text x="20" y="308" fill="#FFF" font-size="14" font-weight="500">Sat, Mar 15 – 17:15</text>
-  <text x="20" y="328" fill="#666" font-size="12">Legs & core</text>
+  <text x="20" y="328" fill="#666" font-size="12">Legs &amp; core</text>
   <text x="398" y="319" fill="#444" font-size="22" text-anchor="end">›</text>
   <line x1="20" y1="342" x2="400" y2="342" stroke="#1C1C1C" stroke-width="1"/>
 
