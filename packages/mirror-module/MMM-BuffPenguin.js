@@ -14,6 +14,7 @@ Module.register("MMM-BuffPenguin", {
     backendUrl: "http://localhost:3000", // backend address; localhost works when both run on the same Pi
     updateInterval: 60 * 1000,           // how often to re-poll the freshness endpoint (milliseconds)
     lookbackDays: 14,                    // passed to /muscle-groups/freshness?days= query param
+    anatomySex: "male",                  // "male" | "female" — selects which SVG overlay to display
   },
 
   // Internal state — reset on each module reload
@@ -31,6 +32,7 @@ Module.register("MMM-BuffPenguin", {
     this.sendSocketNotification("INIT", { // external: MM2 socket bridge to node_helper.js
       backendUrl: this.config.backendUrl,
       lookbackDays: this.config.lookbackDays,
+      anatomySex: this.config.anatomySex,
     });
     this.scheduleUpdate();
   },

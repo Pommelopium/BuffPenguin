@@ -142,7 +142,8 @@ Add the module to your MagicMirror² config file (`config/config.js`):
   config: {
     backendUrl: "http://localhost:3000",
     updateInterval: 60000,   // refresh every 60 seconds
-    lookbackDays: 14         // show training history for the past 14 days
+    lookbackDays: 14,        // show training history for the past 14 days
+    anatomySex: "male"       // "male" or "female" — selects the anatomy overlay
   }
 }
 ```

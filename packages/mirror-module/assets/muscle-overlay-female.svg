@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  muscle-overlay-female.svg — BuffPenguin mirror display (female anatomy)
+  ========================================================================
+  Replace the silhouette paths and muscle region paths with female anatomy
+  artwork. The coordinate system, IDs, and class names must stay identical
+  to muscle-overlay.svg so the same CSS and JS work for both sexes.
+
+  Layer 1 "silhouette"     — grey body outline for reference
+  Layer 2 "muscle-regions" — one <path> per muscle group
+
+  Each <path> must have:
+    id="[slug]"           matches the DB slug (see CLAUDE.md for full list)
+    class="muscle-region" targeted by MMM-BuffPenguin.css freshness classes
+
+  Bilateral muscles use two M…Z subpaths in one <path> element.
+
+  Anterior figure: centred x=60   (x range ~11–109)
+  Posterior figure: centred x=180 (x range ~131–229, i.e. x+120)
+  viewBox: 0 0 240 400
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 400" version="1.1">
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- LAYER 1 — body silhouette              -->
+  <!-- Replace with female body outline paths -->
+  <!-- ═══════════════════════════════════════ -->
+  <g id="silhouette" fill="none" stroke="#aaaaaa" stroke-width="1" opacity="0.5">
+
+    <!-- Anterior (front), centred x=60 -->
+    <ellipse cx="60" cy="26" rx="16" ry="21"/>
+    <!-- neck -->
+    <path d="M 54,44 L 66,44 L 67,62 L 53,62 Z"/>
+    <!-- torso: shoulders taper to waist, open to hip -->
+    <path d="M 22,62 L 98,62 L 92,96 L 88,140 L 84,176 L 36,176 L 32,140 L 28,96 Z"/>
+    <!-- pelvis -->
+    <path d="M 32,174 L 88,174 L 90,198 L 30,198 Z"/>
+    <!-- left upper arm -->
+    <path d="M 13,64 L 26,64 L 28,156 L 11,153 Z"/>
+    <!-- right upper arm -->
+    <path d="M 94,64 L 107,64 L 109,153 L 92,156 Z"/>
+    <!-- left forearm -->
+    <path d="M 10,153 L 25,156 L 23,228 L 8,225 Z"/>
+    <!-- right forearm -->
+    <path d="M 95,156 L 110,153 L 112,225 L 97,228 Z"/>
+    <!-- left thigh -->
+    <path d="M 32,197 L 57,197 L 56,310 L 33,308 Z"/>
+    <!-- right thigh -->
+    <path d="M 63,197 L 88,197 L 87,308 L 64,310 Z"/>
+    <!-- left lower leg -->
+    <path d="M 33,308 L 55,308 L 54,386 L 32,386 Z"/>
+    <!-- right lower leg -->
+    <path d="M 65,308 L 87,308 L 88,386 L 66,386 Z"/>
+
+    <!-- Posterior (back), centred x=180 (all x+120) -->
+    <ellipse cx="180" cy="26" rx="16" ry="21"/>
+    <path d="M 174,44 L 186,44 L 187,62 L 173,62 Z"/>
+    <path d="M 142,62 L 218,62 L 212,96 L 208,140 L 204,176 L 156,176 L 152,140 L 148,96 Z"/>
+    <path d="M 152,174 L 208,174 L 210,198 L 150,198 Z"/>
+    <path d="M 133,64 L 146,64 L 148,156 L 131,153 Z"/>
+    <path d="M 214,64 L 227,64 L 229,153 L 212,156 Z"/>
+    <path d="M 130,153 L 145,156 L 143,228 L 128,225 Z"/>
+    <path d="M 215,156 L 230,153 L 232,225 L 217,228 Z"/>
+    <path d="M 152,197 L 177,197 L 176,310 L 153,308 Z"/>
+    <path d="M 183,197 L 208,197 L 207,308 L 184,310 Z"/>
+    <path d="M 153,308 L 175,308 L 174,386 L 152,386 Z"/>
+    <path d="M 185,308 L 207,308 L 208,386 L 186,386 Z"/>
+  </g>
+
+  <!-- ════════════════════════════════════════════════════════════════ -->
+  <!-- LAYER 2 — muscle regions                                        -->
+  <!-- Replace each path's d="" with female-anatomy muscle outlines.   -->
+  <!-- Keep id and class attributes exactly as-is.                     -->
+  <!-- ════════════════════════════════════════════════════════════════ -->
+  <g id="muscle-regions">
+
+    <!-- ── ANTERIOR (FRONT) ─────────────────────────────────────── -->
+
+    <path id="sternocleidomastoid" class="muscle-region"
+      d="M 48,43 L 57,43 L 61,64 L 54,66 Z
+         M 63,43 L 72,43 L 66,66 L 59,64 Z"/>
+
+    <path id="pectoralis-major-upper" class="muscle-region"
+      d="M 34,65 L 60,70 L 58,93 L 33,87 Z
+         M 60,70 L 86,65 L 87,87 L 62,93 Z"/>
+
+    <path id="pectoralis-major-lower" class="muscle-region"
+      d="M 33,87 L 58,93 L 56,115 L 33,109 Z
+         M 62,93 L 87,87 L 87,109 L 64,115 Z"/>
+
+    <path id="serratus-anterior" class="muscle-region"
+      d="M 27,91 L 35,93 L 34,136 L 26,134 Z
+         M 85,93 L 93,91 L 94,134 L 86,136 Z"/>
+
+    <path id="anterior-deltoid" class="muscle-region"
+      d="M 17,64 L 32,63 L 35,87 L 19,87 Z
+         M 88,63 L 103,64 L 101,87 L 85,87 Z"/>
+
+    <path id="lateral-deltoid" class="muscle-region"
+      d="M 11,68 L 21,65 L 21,85 L 11,84 Z
+         M 99,65 L 109,68 L 109,84 L 99,85 Z"/>
+
+    <path id="biceps-brachii" class="muscle-region"
+      d="M 13,87 L 24,86 L 27,133 L 21,143 L 11,129 Z
+         M 96,86 L 107,87 L 109,129 L 99,143 L 93,133 Z"/>
+
+    <path id="brachialis" class="muscle-region"
+      d="M 12,129 L 24,131 L 24,155 L 12,153 Z
+         M 96,131 L 108,129 L 108,153 L 96,155 Z"/>
+
+    <path id="brachioradialis" class="muscle-region"
+      d="M 11,153 L 22,155 L 20,181 L 9,178 Z
+         M 98,155 L 109,153 L 111,178 L 100,181 Z"/>
+
+    <path id="forearm-flexors" class="muscle-region"
+      d="M 10,178 L 21,181 L 19,222 L 8,219 Z
+         M 99,181 L 110,178 L 112,219 L 101,222 Z"/>
+
+    <path id="rectus-abdominis" class="muscle-region"
+      d="M 52,116 L 68,116 L 68,172 L 52,172 Z"/>
+
+    <path id="external-obliques" class="muscle-region"
+      d="M 28,109 L 51,117 L 49,172 L 26,162 Z
+         M 69,117 L 92,109 L 94,162 L 71,172 Z"/>
+
+    <path id="internal-obliques" class="muscle-region"
+      d="M 33,119 L 51,121 L 49,165 L 32,157 Z
+         M 69,121 L 87,119 L 88,157 L 71,165 Z"/>
+
+    <path id="transversus-abdominis" class="muscle-region"
+      d="M 41,162 L 79,162 L 79,176 L 41,176 Z"/>
+
+    <path id="iliopsoas" class="muscle-region"
+      d="M 37,167 L 57,164 L 56,190 L 35,188 Z
+         M 63,164 L 83,167 L 85,188 L 64,190 Z"/>
+
+    <path id="tensor-fasciae-latae" class="muscle-region"
+      d="M 24,165 L 35,163 L 37,198 L 24,198 Z
+         M 85,163 L 96,165 L 96,198 L 85,198 Z"/>
+
+    <path id="sartorius" class="muscle-region"
+      d="M 47,188 L 56,187 L 50,310 L 41,310 Z
+         M 64,187 L 73,188 L 79,310 L 70,310 Z"/>
+
+    <path id="rectus-femoris" class="muscle-region"
+      d="M 41,192 L 55,189 L 55,304 L 41,304 Z
+         M 65,189 L 79,192 L 79,304 L 65,304 Z"/>
+
+    <path id="vastus-lateralis" class="muscle-region"
+      d="M 30,196 L 41,194 L 43,304 L 31,300 Z
+         M 79,194 L 90,196 L 89,300 L 77,304 Z"/>
+
+    <path id="vastus-medialis" class="muscle-region"
+      d="M 43,262 L 53,259 L 54,304 L 44,309 L 40,292 Z
+         M 67,259 L 77,262 L 80,292 L 76,309 L 66,304 Z"/>
+
+    <path id="adductor-magnus" class="muscle-region"
+      d="M 43,194 L 52,192 L 51,300 L 41,298 Z
+         M 68,192 L 77,194 L 79,298 L 69,300 Z"/>
+
+    <path id="adductor-longus" class="muscle-region"
+      d="M 45,196 L 52,194 L 50,257 L 43,255 Z
+         M 68,194 L 75,196 L 77,255 L 70,257 Z"/>
+
+    <path id="gracilis" class="muscle-region"
+      d="M 47,200 L 51,200 L 50,309 L 46,309 Z
+         M 69,200 L 73,200 L 74,309 L 70,309 Z"/>
+
+    <path id="tibialis-anterior" class="muscle-region"
+      d="M 54,322 L 63,320 L 62,380 L 53,378 Z
+         M 77,320 L 86,322 L 87,378 L 78,380 Z"/>
+
+    <path id="peroneus-longus" class="muscle-region"
+      d="M 47,324 L 56,322 L 55,374 L 46,371 Z
+         M 84,322 L 93,324 L 92,371 L 83,374 Z"/>
+
+    <!-- ── POSTERIOR (BACK) ──────────────────────────────────────── -->
+
+    <path id="upper-trapezius" class="muscle-region"
+      d="M 161,57 L 199,57 L 210,86 L 180,94 L 150,86 Z"/>
+
+    <path id="middle-trapezius" class="muscle-region"
+      d="M 150,94 L 210,94 L 210,112 L 150,112 Z"/>
+
+    <path id="lower-trapezius" class="muscle-region"
+      d="M 162,110 L 198,110 L 192,137 L 168,137 Z"/>
+
+    <path id="rhomboids" class="muscle-region"
+      d="M 167,82 L 193,82 L 193,112 L 167,112 Z"/>
+
+    <path id="posterior-deltoid" class="muscle-region"
+      d="M 136,67 L 152,65 L 154,89 L 137,89 Z
+         M 208,65 L 224,67 L 223,89 L 206,89 Z"/>
+
+    <path id="infraspinatus" class="muscle-region"
+      d="M 148,84 L 168,82 L 168,116 L 148,118 Z
+         M 192,82 L 212,84 L 212,118 L 192,116 Z"/>
+
+    <path id="teres-minor" class="muscle-region"
+      d="M 148,116 L 164,116 L 164,128 L 148,126 Z
+         M 196,116 L 212,116 L 212,126 L 196,128 Z"/>
+
+    <path id="teres-major" class="muscle-region"
+      d="M 147,126 L 162,126 L 163,140 L 147,138 Z
+         M 198,126 L 213,126 L 213,138 L 198,140 Z"/>
+
+    <path id="subscapularis" class="muscle-region"
+      d="M 152,86 L 165,84 L 165,118 L 152,120 Z
+         M 195,84 L 208,86 L 208,120 L 195,118 Z"/>
+
+    <path id="latissimus-dorsi" class="muscle-region"
+      d="M 137,94 L 157,88 L 168,124 L 163,164 L 146,168 L 134,142 Z
+         M 203,88 L 223,94 L 226,142 L 214,168 L 197,164 L 192,124 Z"/>
+
+    <path id="triceps-long-head" class="muscle-region"
+      d="M 136,90 L 148,90 L 150,156 L 138,154 Z
+         M 212,90 L 224,90 L 222,154 L 210,156 Z"/>
+
+    <path id="triceps-lateral-head" class="muscle-region"
+      d="M 127,94 L 139,91 L 140,152 L 128,150 Z
+         M 221,91 L 233,94 L 232,150 L 220,152 Z"/>
+
+    <path id="forearm-extensors" class="muscle-region"
+      d="M 127,152 L 139,154 L 137,220 L 125,217 Z
+         M 221,154 L 233,152 L 235,217 L 223,220 Z"/>
+
+    <path id="erector-spinae" class="muscle-region"
+      d="M 169,96 L 179,96 L 178,172 L 168,172 Z
+         M 181,96 L 191,96 L 192,172 L 182,172 Z"/>
+
+    <path id="multifidus" class="muscle-region"
+      d="M 172,152 L 188,152 L 188,176 L 172,176 Z"/>
+
+    <path id="quadratus-lumborum" class="muscle-region"
+      d="M 152,154 L 169,152 L 169,176 L 152,176 Z
+         M 191,152 L 208,154 L 208,176 L 191,176 Z"/>
+
+    <path id="gluteus-maximus" class="muscle-region"
+      d="M 150,178 L 178,172 L 180,214 L 153,218 Z
+         M 182,172 L 210,178 L 207,218 L 180,214 Z"/>
+
+    <path id="gluteus-medius" class="muscle-region"
+      d="M 145,163 L 167,159 L 169,184 L 147,187 Z
+         M 193,159 L 215,163 L 213,187 L 191,184 Z"/>
+
+    <path id="gluteus-minimus" class="muscle-region"
+      d="M 150,167 L 167,164 L 168,186 L 151,188 Z
+         M 193,164 L 210,167 L 209,188 L 192,186 Z"/>
+
+    <path id="piriformis" class="muscle-region"
+      d="M 157,192 L 178,189 L 178,202 L 157,205 Z
+         M 182,189 L 203,192 L 203,205 L 182,202 Z"/>
+
+    <path id="biceps-femoris" class="muscle-region"
+      d="M 151,214 L 165,212 L 164,308 L 150,306 Z
+         M 195,212 L 209,214 L 210,306 L 196,308 Z"/>
+
+    <path id="semitendinosus" class="muscle-region"
+      d="M 162,214 L 173,214 L 172,310 L 161,310 Z
+         M 187,214 L 198,214 L 199,310 L 188,310 Z"/>
+
+    <path id="semimembranosus" class="muscle-region"
+      d="M 165,216 L 174,216 L 173,306 L 164,306 Z
+         M 186,216 L 195,216 L 196,306 L 187,306 Z"/>
+
+    <path id="gastrocnemius" class="muscle-region"
+      d="M 150,316 L 167,312 L 170,364 L 157,370 L 147,356 Z
+         M 193,312 L 210,316 L 213,356 L 200,370 L 190,364 Z"/>
+
+    <path id="soleus" class="muscle-region"
+      d="M 152,359 L 168,356 L 167,386 L 152,386 Z
+         M 192,356 L 208,359 L 208,386 L 193,386 Z"/>
+
+  </g>
+
+  <text x="60"  y="397" text-anchor="middle" fill="#555" font-size="8" font-family="sans-serif">FRONT</text>
+  <text x="180" y="397" text-anchor="middle" fill="#555" font-size="8" font-family="sans-serif">BACK</text>
+</svg>

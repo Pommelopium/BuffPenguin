@@ -23,14 +23,12 @@
 
 .bp-figures {
   display: flex;
-  flex-direction: row;
-  gap: 16px;
   justify-content: center;
 }
 
-/* The SVG itself */
+/* The combined SVG (front + back side by side, viewBox 0 0 864 648) */
 .bp-figures svg {
-  width: 160px;
+  width: 320px;
   height: auto;
 }
 

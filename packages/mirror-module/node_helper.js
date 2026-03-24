@@ -2,8 +2,8 @@
 
 // node_helper.js — MagicMirror² server-side helper.
 // Runs in Node.js (not in the browser renderer). Handles two jobs:
-//   1. Loads the muscle-overlay.svg from disk once at startup and sends
-//      its content to the browser module on demand.
+//   1. Loads the correct muscle-overlay SVG from disk on INIT (male or female
+//      depending on the anatomySex config option) and sends it to the browser.
 //   2. Fetches freshness data from the BuffPenguin backend on each poll
 //      interval and forwards the result to the browser module.
 //
@@ -15,36 +15,37 @@ const path = require("path");              // external: Node.js built-in path ut
 const fs = require("fs");                  // external: Node.js built-in filesystem access
 
 module.exports = NodeHelper.create({
-  svgContent: null, // cached SVG string, loaded once from disk in start()
+  svgContent: null, // cached SVG string, loaded on first INIT from the browser module
 
   // Called by MM2 when the helper process starts.
-  // Loads the SVG immediately so it's ready to send when the browser
-  // module sends its first INIT notification.
   start() {
     console.log("MMM-BuffPenguin node_helper started");
-    this.loadSvg();
   },
 
   // Reads the muscle overlay SVG from the assets folder.
-  // Falls back to a minimal error SVG if the file hasn't been created yet
-  // (i.e. the Inkscape refinement step hasn't been done).
-  loadSvg() {
-    const svgPath = path.join(__dirname, "assets", "muscle-overlay.svg"); // reads from local filesystem
+  // Selects the male or female variant based on the anatomySex config option.
+  // Falls back to a minimal error SVG if the file hasn't been created yet.
+  loadSvg(anatomySex) {
+    const filename = anatomySex === "female"
+      ? "muscle-overlay-female.svg"
+      : "muscle-overlay.svg";
+    const svgPath = path.join(__dirname, "assets", filename); // reads from local filesystem
     if (fs.existsSync(svgPath)) {
       this.svgContent = fs.readFileSync(svgPath, "utf8"); // reads entire SVG file into memory
     } else {
-      console.warn("MMM-BuffPenguin: muscle-overlay.svg not found at", svgPath);
+      console.warn(`MMM-BuffPenguin: ${filename} not found at`, svgPath);
       this.svgContent = this.getFallbackSvg(); // use inline placeholder instead
     }
   },
 
   // Receives socket notifications from the browser-side MMM-BuffPenguin.js module.
-  // INIT: browser module has loaded — send the SVG so it can render immediately.
+  // INIT: browser module has loaded — load the correct SVG and send it immediately.
   // FETCH_FRESHNESS: interval fired — fetch new data from the backend and send it back.
   socketNotificationReceived(notification, payload) {
     if (notification === "INIT") {
-      // Send the cached SVG string to the browser module.
+      // Load the SVG for the configured anatomy sex, then send it to the browser module.
       // The browser module injects it as innerHTML so CSS can target individual paths.
+      this.loadSvg(payload.anatomySex);
       this.sendSocketNotification("SVG_CONTENT", this.svgContent); // external: MM2 socket bridge
     } else if (notification === "FETCH_FRESHNESS") {
       this.fetchFreshness(payload);
