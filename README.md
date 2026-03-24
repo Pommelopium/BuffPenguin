@@ -20,10 +20,10 @@ Anyone who wants to build this setup at home. The whole system runs locally on a
 
 | Component | Technology | Runs on |
 |---|---|---|
-| Mirror display | MagicMirror² module | Raspberry Pi |
+| Mirror display | MagicMirror² module | Raspberry Pi or Windows PC |
 | Mobile app | Flutter (iOS & Android) | Your phone |
-| Backend API | Node.js + TypeScript + Fastify | Raspberry Pi |
-| Database | SQLite | Raspberry Pi |
+| Backend API | Node.js + TypeScript + Fastify | Raspberry Pi or Windows PC |
+| Database | SQLite | Raspberry Pi or Windows PC |
 
 ---
 
@@ -45,6 +45,8 @@ Anyone who wants to build this setup at home. The whole system runs locally on a
   ```
 - MagicMirror² — follow the [official installation guide](https://docs.magicmirror.builders/getting-started/installation.html)
 
+> **Windows alternative:** The backend and MagicMirror² module also run on a Windows PC — useful for development or if you want to run the display on a regular Windows machine instead of a Pi. See the Windows-specific notes alongside each step below.
+
 **Development machine (for the mobile app)**
 - [Flutter SDK](https://docs.flutter.dev/get-started/install) (3.x or later)
 - Android Studio or Xcode depending on your target platform
@@ -53,8 +55,6 @@ Anyone who wants to build this setup at home. The whole system runs locally on a
 
 ### 1. Clone the repository
 
-Run this on the Raspberry Pi:
-
 ```bash
 git clone https://github.com/Pommelopium/BuffPenguin.git
 cd BuffPenguin
@@ -62,7 +62,7 @@ cd BuffPenguin
 
 ---
 
-### 2. Backend (Raspberry Pi)
+### 2. Backend
 
 Install dependencies and build:
 
@@ -70,6 +70,12 @@ Install dependencies and build:
 npm install
 npm run build --workspace=packages/backend
 ```
+
+> **Windows note:** `better-sqlite3` is a native addon. For most Node.js 20 builds on Windows x64 a pre-built binary is downloaded automatically during `npm install` and no extra tools are needed. If the install fails with a build error, install the Visual C++ build tools once:
+> ```powershell
+> npm install --global windows-build-tools
+> ```
+> Or install "Desktop development with C++" from the [Visual Studio installer](https://visualstudio.microsoft.com/downloads/).
 
 Set up the database (run once):
 
@@ -88,7 +94,7 @@ npm run dev --workspace=packages/backend
 # Open http://localhost:3000/health in a browser — should return {"status":"ok"}
 ```
 
-**Run as a background service** so the backend starts automatically on boot:
+**Run as a background service (Raspberry Pi / Linux)** so the backend starts automatically on boot:
 
 ```bash
 sudo cp packages/backend/systemd/buffpenguin.service /etc/systemd/system/
@@ -103,17 +109,31 @@ Check it is running:
 sudo systemctl status buffpenguin
 ```
 
+> **Windows note:** The systemd service file is Linux-only. On Windows, use [NSSM](https://nssm.cc/) to run the backend as a Windows Service, or add a Task Scheduler entry that runs `node dist/index.js` at login from the `packages/backend` directory. For development, `npm run dev --workspace=packages/backend` is sufficient.
+
 ---
 
-### 3. Magic Mirror Module (Raspberry Pi)
+### 3. Magic Mirror Module
 
-Symlink the module into your MagicMirror² modules folder:
+MagicMirror² runs on both Raspberry Pi and Windows — the module code is identical on both.
+
+**Raspberry Pi / Linux** — symlink the module into your MagicMirror² modules folder:
 
 ```bash
 ln -s ~/BuffPenguin/packages/mirror-module ~/MagicMirror/modules/MMM-BuffPenguin
 ```
 
-Add the module to your MagicMirror² config file (`~/MagicMirror/config/config.js`):
+**Windows** — create a directory junction (equivalent of a symlink) in PowerShell:
+
+```powershell
+New-Item -ItemType Junction `
+  -Path "$env:USERPROFILE\MagicMirror\modules\MMM-BuffPenguin" `
+  -Target "$env:USERPROFILE\BuffPenguin\packages\mirror-module"
+```
+
+> Adjust the paths above to match where you cloned the repo and installed MagicMirror².
+
+Add the module to your MagicMirror² config file (`config/config.js`):
 
 ```js
 {
@@ -132,6 +152,8 @@ Then restart MagicMirror²:
 ```bash
 cd ~/MagicMirror && npm run start
 ```
+
+> **Windows note:** Mobile auto-discovery uses mDNS (UDP port 5353). Windows Defender Firewall will prompt "Allow access?" the first time the backend runs — click **Allow**. If the prompt doesn't appear and the phone can't find the backend, add a firewall rule manually or use the manual IP entry in the app's Settings screen instead.
 
 > **Note:** The muscle overlay SVG (`packages/mirror-module/assets/muscle-overlay.svg`) currently contains placeholder shapes. For accurate muscle region highlighting, open the file in [Inkscape](https://inkscape.org/) and draw the actual body region outlines over the silhouette. Each path needs `id="[slug]"` and `class="muscle-region"` — the slugs are listed in `CLAUDE.md`.
 
