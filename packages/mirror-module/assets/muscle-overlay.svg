@@ -2,286 +2,326 @@
 <!--
   muscle-overlay.svg — BuffPenguin mirror display
   ================================================
-  This SVG has TWO layers:
-    1. "silhouette"      — grey body outline (background reference)
-    2. "muscle-regions"  — colored overlay regions, one element per muscle group
+  Layer 1 "silhouette"     — grey body outline for reference
+  Layer 2 "muscle-regions" — one <path> per muscle group
 
-  Each muscle-region element has:
-    id="[slug]"           e.g. id="rectus-femoris"
-    class="muscle-region" (required for CSS freshness coloring)
+  Each <path> has:
+    id="[slug]"           matches the DB slug and SVG overlay ID
+    class="muscle-region" targeted by MMM-BuffPenguin.css freshness classes
 
-  TODO: Open this file in Inkscape and draw accurate muscle region shapes.
-  The placeholder ellipses show approximate anatomical positions but need
-  to be replaced with accurate polygon paths for a polished display.
+  Bilateral muscles use two M…Z subpaths in one <path> element.
+  Fill is inherited from the freshness CSS class on the element.
 
-  Anterior figure occupies x: 10–110, y: 0–380  (centred at x=60)
-  Posterior figure occupies x: 130–230, y: 0–380  (centred at x=180)
-  Total viewBox: 0 0 240 400
+  Anterior figure: centred x=60   (x range ~11–109)
+  Posterior figure: centred x=180 (x range ~131–229, i.e. x+120)
+  viewBox: 0 0 240 400
 
-  Slugs used (50 total):
-    Front: sternocleidomastoid, pectoralis-major-upper, pectoralis-major-lower,
-           serratus-anterior, anterior-deltoid, lateral-deltoid, biceps-brachii,
-           brachialis, brachioradialis, forearm-flexors, rectus-abdominis,
-           external-obliques, internal-obliques, transversus-abdominis, iliopsoas,
-           tensor-fasciae-latae, sartorius, rectus-femoris, vastus-lateralis,
-           vastus-medialis, adductor-magnus, adductor-longus, gracilis,
-           tibialis-anterior, peroneus-longus
-    Back:  upper-trapezius, middle-trapezius, lower-trapezius, rhomboids,
-           posterior-deltoid, infraspinatus, teres-minor, teres-major,
-           subscapularis, latissimus-dorsi, triceps-long-head, triceps-lateral-head,
-           forearm-extensors, erector-spinae, multifidus, quadratus-lumborum,
-           gluteus-maximus, gluteus-medius, gluteus-minimus, piriformis,
-           biceps-femoris, semitendinosus, semimembranosus, gastrocnemius, soleus
+  Shapes are anatomically-positioned polygons — open in Inkscape to
+  refine with accurate outlines. Slug list is in CLAUDE.md.
 -->
-<svg
-  xmlns="http://www.w3.org/2000/svg"
-  viewBox="0 0 240 400"
-  version="1.1"
->
-  <!-- ======================== -->
-  <!-- LAYER 1: Body silhouette -->
-  <!-- ======================== -->
-  <g id="silhouette" opacity="0.25" fill="#aaaaaa">
-    <!-- Anterior (front) rough silhouette — centred at x=60 -->
-    <ellipse cx="60" cy="30" rx="18" ry="22"/>
-    <rect x="54" y="50" width="12" height="15"/>
-    <rect x="36" y="65" width="48" height="100" rx="6"/>
-    <rect x="18" y="68" width="16" height="80" rx="6"/>
-    <rect x="86" y="68" width="16" height="80" rx="6"/>
-    <rect x="34" y="162" width="52" height="30" rx="4"/>
-    <rect x="34" y="190" width="22" height="118" rx="6"/>
-    <rect x="64" y="190" width="22" height="118" rx="6"/>
-    <rect x="36" y="305" width="18" height="65" rx="5"/>
-    <rect x="66" y="305" width="18" height="65" rx="5"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 400" version="1.1">
 
-    <!-- Posterior (back) rough silhouette — centred at x=180 -->
-    <ellipse cx="180" cy="30" rx="18" ry="22"/>
-    <rect x="174" y="50" width="12" height="15"/>
-    <rect x="156" y="65" width="48" height="100" rx="6"/>
-    <rect x="138" y="68" width="16" height="80" rx="6"/>
-    <rect x="206" y="68" width="16" height="80" rx="6"/>
-    <rect x="154" y="162" width="52" height="40" rx="4"/>
-    <rect x="154" y="200" width="22" height="108" rx="6"/>
-    <rect x="184" y="200" width="22" height="108" rx="6"/>
-    <rect x="156" y="305" width="18" height="65" rx="5"/>
-    <rect x="186" y="305" width="18" height="65" rx="5"/>
+  <!-- ═══════════════════════════════════════ -->
+  <!-- LAYER 1 — body silhouette              -->
+  <!-- ═══════════════════════════════════════ -->
+  <g id="silhouette" fill="#aaaaaa" opacity="0.28">
+
+    <!-- Anterior (front), centred x=60 -->
+    <ellipse cx="60" cy="26" rx="16" ry="21"/>
+    <!-- neck -->
+    <path d="M 54,44 L 66,44 L 67,62 L 53,62 Z"/>
+    <!-- torso: shoulders taper to waist, open to hip -->
+    <path d="M 22,62 L 98,62 L 92,96 L 88,140 L 84,176 L 36,176 L 32,140 L 28,96 Z"/>
+    <!-- pelvis -->
+    <path d="M 32,174 L 88,174 L 90,198 L 30,198 Z"/>
+    <!-- left upper arm -->
+    <path d="M 13,64 L 26,64 L 28,156 L 11,153 Z"/>
+    <!-- right upper arm -->
+    <path d="M 94,64 L 107,64 L 109,153 L 92,156 Z"/>
+    <!-- left forearm -->
+    <path d="M 10,153 L 25,156 L 23,228 L 8,225 Z"/>
+    <!-- right forearm -->
+    <path d="M 95,156 L 110,153 L 112,225 L 97,228 Z"/>
+    <!-- left thigh -->
+    <path d="M 32,197 L 57,197 L 56,310 L 33,308 Z"/>
+    <!-- right thigh -->
+    <path d="M 63,197 L 88,197 L 87,308 L 64,310 Z"/>
+    <!-- left lower leg -->
+    <path d="M 33,308 L 55,308 L 54,386 L 32,386 Z"/>
+    <!-- right lower leg -->
+    <path d="M 65,308 L 87,308 L 88,386 L 66,386 Z"/>
+
+    <!-- Posterior (back), centred x=180 (all x+120) -->
+    <ellipse cx="180" cy="26" rx="16" ry="21"/>
+    <path d="M 174,44 L 186,44 L 187,62 L 173,62 Z"/>
+    <path d="M 142,62 L 218,62 L 212,96 L 208,140 L 204,176 L 156,176 L 152,140 L 148,96 Z"/>
+    <path d="M 152,174 L 208,174 L 210,198 L 150,198 Z"/>
+    <path d="M 133,64 L 146,64 L 148,156 L 131,153 Z"/>
+    <path d="M 214,64 L 227,64 L 229,153 L 212,156 Z"/>
+    <path d="M 130,153 L 145,156 L 143,228 L 128,225 Z"/>
+    <path d="M 215,156 L 230,153 L 232,225 L 217,228 Z"/>
+    <path d="M 152,197 L 177,197 L 176,310 L 153,308 Z"/>
+    <path d="M 183,197 L 208,197 L 207,308 L 184,310 Z"/>
+    <path d="M 153,308 L 175,308 L 174,386 L 152,386 Z"/>
+    <path d="M 185,308 L 207,308 L 208,386 L 186,386 Z"/>
   </g>
 
-  <!-- ======================================= -->
-  <!-- LAYER 2: Muscle region overlays         -->
-  <!-- id=[slug], class="muscle-region"        -->
-  <!-- CSS in MMM-BuffPenguin.css adds color   -->
-  <!-- based on freshness bucket               -->
-  <!-- ======================================= -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- LAYER 2 — muscle regions                                       -->
+  <!-- fill: transparent by default; CSS freshness class adds colour  -->
+  <!-- Bilateral muscles: two M…Z subpaths in one <path>              -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
   <g id="muscle-regions">
 
-    <!-- ===== ANTERIOR (FRONT) regions ===== -->
+    <!-- ── ANTERIOR (FRONT) ─────────────────────────────────────── -->
 
-    <!-- Neck / sternocleidomastoid — side of neck -->
-    <ellipse id="sternocleidomastoid" class="muscle-region"
-      cx="60" cy="55" rx="7" ry="7"/>
+    <!-- sternocleidomastoid — diagonal bands either side of neck -->
+    <path id="sternocleidomastoid" class="muscle-region"
+      d="M 48,43 L 57,43 L 61,64 L 54,66 Z
+         M 63,43 L 72,43 L 66,66 L 59,64 Z"/>
 
-    <!-- Upper chest -->
-    <ellipse id="pectoralis-major-upper" class="muscle-region"
-      cx="60" cy="83" rx="20" ry="9"/>
+    <!-- pectoralis-major-upper — upper pec fan -->
+    <path id="pectoralis-major-upper" class="muscle-region"
+      d="M 34,65 L 60,70 L 58,93 L 33,87 Z
+         M 60,70 L 86,65 L 87,87 L 62,93 Z"/>
 
-    <!-- Lower chest -->
-    <ellipse id="pectoralis-major-lower" class="muscle-region"
-      cx="60" cy="100" rx="20" ry="10"/>
+    <!-- pectoralis-major-lower — lower pec fan -->
+    <path id="pectoralis-major-lower" class="muscle-region"
+      d="M 33,87 L 58,93 L 56,115 L 33,109 Z
+         M 62,93 L 87,87 L 87,109 L 64,115 Z"/>
 
-    <!-- Serratus anterior — side of ribs -->
-    <ellipse id="serratus-anterior" class="muscle-region"
-      cx="38" cy="118" rx="7" ry="14"/>
+    <!-- serratus-anterior — vertical band on outer ribs -->
+    <path id="serratus-anterior" class="muscle-region"
+      d="M 27,91 L 35,93 L 34,136 L 26,134 Z
+         M 85,93 L 93,91 L 94,134 L 86,136 Z"/>
 
-    <!-- Anterior deltoid — front of shoulder -->
-    <ellipse id="anterior-deltoid" class="muscle-region"
-      cx="32" cy="74" rx="9" ry="10"/>
+    <!-- anterior-deltoid — front shoulder cap -->
+    <path id="anterior-deltoid" class="muscle-region"
+      d="M 17,64 L 32,63 L 35,87 L 19,87 Z
+         M 88,63 L 103,64 L 101,87 L 85,87 Z"/>
 
-    <!-- Lateral deltoid — outer shoulder -->
-    <ellipse id="lateral-deltoid" class="muscle-region"
-      cx="21" cy="72" rx="6" ry="9"/>
+    <!-- lateral-deltoid — outer shoulder cap -->
+    <path id="lateral-deltoid" class="muscle-region"
+      d="M 11,68 L 21,65 L 21,85 L 11,84 Z
+         M 99,65 L 109,68 L 109,84 L 99,85 Z"/>
 
-    <!-- Biceps brachii — front upper arm -->
-    <ellipse id="biceps-brachii" class="muscle-region"
-      cx="26" cy="98" rx="7" ry="17"/>
+    <!-- biceps-brachii — anterior upper arm, teardrop -->
+    <path id="biceps-brachii" class="muscle-region"
+      d="M 13,87 L 24,86 L 27,133 L 21,143 L 11,129 Z
+         M 96,86 L 107,87 L 109,129 L 99,143 L 93,133 Z"/>
 
-    <!-- Brachialis — lower upper arm, elbow area -->
-    <ellipse id="brachialis" class="muscle-region"
-      cx="27" cy="120" rx="6" ry="9"/>
+    <!-- brachialis — lower upper arm -->
+    <path id="brachialis" class="muscle-region"
+      d="M 12,129 L 24,131 L 24,155 L 12,153 Z
+         M 96,131 L 108,129 L 108,153 L 96,155 Z"/>
 
-    <!-- Brachioradialis — upper forearm -->
-    <ellipse id="brachioradialis" class="muscle-region"
-      cx="24" cy="136" rx="6" ry="9"/>
+    <!-- brachioradialis — lateral forearm near elbow -->
+    <path id="brachioradialis" class="muscle-region"
+      d="M 11,153 L 22,155 L 20,181 L 9,178 Z
+         M 98,155 L 109,153 L 111,178 L 100,181 Z"/>
 
-    <!-- Forearm flexors — lower forearm -->
-    <ellipse id="forearm-flexors" class="muscle-region"
-      cx="23" cy="152" rx="5" ry="10"/>
+    <!-- forearm-flexors — medial forearm -->
+    <path id="forearm-flexors" class="muscle-region"
+      d="M 10,178 L 21,181 L 19,222 L 8,219 Z
+         M 99,181 L 110,178 L 112,219 L 101,222 Z"/>
 
-    <!-- Rectus abdominis — centre of abs -->
-    <ellipse id="rectus-abdominis" class="muscle-region"
-      cx="60" cy="130" rx="10" ry="22"/>
+    <!-- rectus-abdominis — central abs column -->
+    <path id="rectus-abdominis" class="muscle-region"
+      d="M 52,116 L 68,116 L 68,172 L 52,172 Z"/>
 
-    <!-- External obliques — sides of abs -->
-    <ellipse id="external-obliques" class="muscle-region"
-      cx="44" cy="130" rx="8" ry="18"/>
+    <!-- external-obliques — oblique bands on flanks -->
+    <path id="external-obliques" class="muscle-region"
+      d="M 28,109 L 51,117 L 49,172 L 26,162 Z
+         M 69,117 L 92,109 L 94,162 L 71,172 Z"/>
 
-    <!-- Internal obliques — deeper, slightly medial -->
-    <ellipse id="internal-obliques" class="muscle-region"
-      cx="48" cy="142" rx="7" ry="12"/>
+    <!-- internal-obliques — slightly deeper, more angled -->
+    <path id="internal-obliques" class="muscle-region"
+      d="M 33,119 L 51,121 L 49,165 L 32,157 Z
+         M 69,121 L 87,119 L 88,157 L 71,165 Z"/>
 
-    <!-- Transversus abdominis — deep lower abdomen -->
-    <ellipse id="transversus-abdominis" class="muscle-region"
-      cx="60" cy="152" rx="9" ry="7"/>
+    <!-- transversus-abdominis — deep horizontal band -->
+    <path id="transversus-abdominis" class="muscle-region"
+      d="M 41,162 L 79,162 L 79,176 L 41,176 Z"/>
 
-    <!-- Iliopsoas — hip flexor, groin -->
-    <ellipse id="iliopsoas" class="muscle-region"
-      cx="57" cy="170" rx="11" ry="11"/>
+    <!-- iliopsoas — hip flexors, inner groin -->
+    <path id="iliopsoas" class="muscle-region"
+      d="M 37,167 L 57,164 L 56,190 L 35,188 Z
+         M 63,164 L 83,167 L 85,188 L 64,190 Z"/>
 
-    <!-- Tensor fasciae latae — outer hip -->
-    <ellipse id="tensor-fasciae-latae" class="muscle-region"
-      cx="38" cy="178" rx="7" ry="11"/>
+    <!-- tensor-fasciae-latae — outer hip strip -->
+    <path id="tensor-fasciae-latae" class="muscle-region"
+      d="M 24,165 L 35,163 L 37,198 L 24,198 Z
+         M 85,163 L 96,165 L 96,198 L 85,198 Z"/>
 
-    <!-- Sartorius — diagonal strap across thigh -->
-    <ellipse id="sartorius" class="muscle-region"
-      cx="50" cy="212" rx="5" ry="26"/>
+    <!-- sartorius — long diagonal strap across thigh -->
+    <path id="sartorius" class="muscle-region"
+      d="M 47,188 L 56,187 L 50,310 L 41,310 Z
+         M 64,187 L 73,188 L 79,310 L 70,310 Z"/>
 
-    <!-- Rectus femoris — centre quad -->
-    <ellipse id="rectus-femoris" class="muscle-region"
-      cx="60" cy="228" rx="9" ry="26"/>
+    <!-- rectus-femoris — centre of quadriceps -->
+    <path id="rectus-femoris" class="muscle-region"
+      d="M 41,192 L 55,189 L 55,304 L 41,304 Z
+         M 65,189 L 79,192 L 79,304 L 65,304 Z"/>
 
-    <!-- Vastus lateralis — outer quad -->
-    <ellipse id="vastus-lateralis" class="muscle-region"
-      cx="73" cy="228" rx="8" ry="25"/>
+    <!-- vastus-lateralis — outer quad -->
+    <path id="vastus-lateralis" class="muscle-region"
+      d="M 30,196 L 41,194 L 43,304 L 31,300 Z
+         M 79,194 L 90,196 L 89,300 L 77,304 Z"/>
 
-    <!-- Vastus medialis — inner quad (teardrop near knee) -->
-    <ellipse id="vastus-medialis" class="muscle-region"
-      cx="51" cy="244" rx="8" ry="17"/>
+    <!-- vastus-medialis — inner quad teardrop near knee -->
+    <path id="vastus-medialis" class="muscle-region"
+      d="M 43,262 L 53,259 L 54,304 L 44,309 L 40,292 Z
+         M 67,259 L 77,262 L 80,292 L 76,309 L 66,304 Z"/>
 
-    <!-- Adductor magnus — large inner thigh -->
-    <ellipse id="adductor-magnus" class="muscle-region"
-      cx="55" cy="222" rx="8" ry="22"/>
+    <!-- adductor-magnus — large inner thigh -->
+    <path id="adductor-magnus" class="muscle-region"
+      d="M 43,194 L 52,192 L 51,300 L 41,298 Z
+         M 68,192 L 77,194 L 79,298 L 69,300 Z"/>
 
-    <!-- Adductor longus — upper inner thigh -->
-    <ellipse id="adductor-longus" class="muscle-region"
-      cx="54" cy="202" rx="7" ry="13"/>
+    <!-- adductor-longus — upper inner thigh -->
+    <path id="adductor-longus" class="muscle-region"
+      d="M 45,196 L 52,194 L 50,257 L 43,255 Z
+         M 68,194 L 75,196 L 77,255 L 70,257 Z"/>
 
-    <!-- Gracilis — thin inner thigh strap -->
-    <ellipse id="gracilis" class="muscle-region"
-      cx="52" cy="238" rx="4" ry="20"/>
+    <!-- gracilis — thin inner thigh strap -->
+    <path id="gracilis" class="muscle-region"
+      d="M 47,200 L 51,200 L 50,309 L 46,309 Z
+         M 69,200 L 73,200 L 74,309 L 70,309 Z"/>
 
-    <!-- Tibialis anterior — outer shin -->
-    <ellipse id="tibialis-anterior" class="muscle-region"
-      cx="71" cy="326" rx="7" ry="22"/>
+    <!-- tibialis-anterior — outer shin -->
+    <path id="tibialis-anterior" class="muscle-region"
+      d="M 54,322 L 63,320 L 62,380 L 53,378 Z
+         M 77,320 L 86,322 L 87,378 L 78,380 Z"/>
 
-    <!-- Peroneus longus — lateral lower leg -->
-    <ellipse id="peroneus-longus" class="muscle-region"
-      cx="76" cy="336" rx="6" ry="17"/>
+    <!-- peroneus-longus — lateral lower leg -->
+    <path id="peroneus-longus" class="muscle-region"
+      d="M 47,324 L 56,322 L 55,374 L 46,371 Z
+         M 84,322 L 93,324 L 92,371 L 83,374 Z"/>
 
-    <!-- ===== POSTERIOR (BACK) regions ===== -->
+    <!-- ── POSTERIOR (BACK) ──────────────────────────────────────── -->
 
-    <!-- Upper trapezius — neck/shoulder top -->
-    <ellipse id="upper-trapezius" class="muscle-region"
-      cx="180" cy="66" rx="22" ry="9"/>
+    <!-- upper-trapezius — diamond from neck to shoulders -->
+    <path id="upper-trapezius" class="muscle-region"
+      d="M 161,57 L 199,57 L 210,86 L 180,94 L 150,86 Z"/>
 
-    <!-- Middle trapezius — mid back horizontal -->
-    <ellipse id="middle-trapezius" class="muscle-region"
-      cx="180" cy="88" rx="20" ry="8"/>
+    <!-- middle-trapezius — horizontal mid-back fibers -->
+    <path id="middle-trapezius" class="muscle-region"
+      d="M 150,94 L 210,94 L 210,112 L 150,112 Z"/>
 
-    <!-- Lower trapezius — lower-mid back -->
-    <ellipse id="lower-trapezius" class="muscle-region"
-      cx="180" cy="108" rx="15" ry="8"/>
+    <!-- lower-trapezius — inverted triangle to lower back -->
+    <path id="lower-trapezius" class="muscle-region"
+      d="M 162,110 L 198,110 L 192,137 L 168,137 Z"/>
 
-    <!-- Rhomboids — between shoulder blades -->
-    <ellipse id="rhomboids" class="muscle-region"
-      cx="180" cy="86" rx="12" ry="11"/>
+    <!-- rhomboids — between shoulder blades -->
+    <path id="rhomboids" class="muscle-region"
+      d="M 167,82 L 193,82 L 193,112 L 167,112 Z"/>
 
-    <!-- Posterior deltoid — back of shoulder -->
-    <ellipse id="posterior-deltoid" class="muscle-region"
-      cx="152" cy="76" rx="9" ry="10"/>
+    <!-- posterior-deltoid — back shoulder cap -->
+    <path id="posterior-deltoid" class="muscle-region"
+      d="M 136,67 L 152,65 L 154,89 L 137,89 Z
+         M 208,65 L 224,67 L 223,89 L 206,89 Z"/>
 
-    <!-- Infraspinatus — below scapular spine -->
-    <ellipse id="infraspinatus" class="muscle-region"
-      cx="156" cy="96" rx="10" ry="11"/>
+    <!-- infraspinatus — below scapular spine -->
+    <path id="infraspinatus" class="muscle-region"
+      d="M 148,84 L 168,82 L 168,116 L 148,118 Z
+         M 192,82 L 212,84 L 212,118 L 192,116 Z"/>
 
-    <!-- Teres minor — below infraspinatus -->
-    <ellipse id="teres-minor" class="muscle-region"
-      cx="153" cy="112" rx="7" ry="7"/>
+    <!-- teres-minor — just below infraspinatus -->
+    <path id="teres-minor" class="muscle-region"
+      d="M 148,116 L 164,116 L 164,128 L 148,126 Z
+         M 196,116 L 212,116 L 212,126 L 196,128 Z"/>
 
-    <!-- Teres major — below teres minor -->
-    <ellipse id="teres-major" class="muscle-region"
-      cx="153" cy="124" rx="7" ry="7"/>
+    <!-- teres-major — below teres minor -->
+    <path id="teres-major" class="muscle-region"
+      d="M 147,126 L 162,126 L 163,140 L 147,138 Z
+         M 198,126 L 213,126 L 213,138 L 198,140 Z"/>
 
-    <!-- Subscapularis — deep under scapula -->
-    <ellipse id="subscapularis" class="muscle-region"
-      cx="162" cy="100" rx="8" ry="11"/>
+    <!-- subscapularis — lateral strip beneath scapula -->
+    <path id="subscapularis" class="muscle-region"
+      d="M 152,86 L 165,84 L 165,118 L 152,120 Z
+         M 195,84 L 208,86 L 208,120 L 195,118 Z"/>
 
-    <!-- Latissimus dorsi — large back wing -->
-    <ellipse id="latissimus-dorsi" class="muscle-region"
-      cx="170" cy="126" rx="16" ry="28"/>
+    <!-- latissimus-dorsi — large back wing armpit to lower back -->
+    <path id="latissimus-dorsi" class="muscle-region"
+      d="M 137,94 L 157,88 L 168,124 L 163,164 L 146,168 L 134,142 Z
+         M 203,88 L 223,94 L 226,142 L 214,168 L 197,164 L 192,124 Z"/>
 
-    <!-- Triceps long head — inner back of upper arm -->
-    <ellipse id="triceps-long-head" class="muscle-region"
-      cx="148" cy="100" rx="7" ry="20"/>
+    <!-- triceps-long-head — inner back of upper arm -->
+    <path id="triceps-long-head" class="muscle-region"
+      d="M 136,90 L 148,90 L 150,156 L 138,154 Z
+         M 212,90 L 224,90 L 222,154 L 210,156 Z"/>
 
-    <!-- Triceps lateral head — outer back of upper arm -->
-    <ellipse id="triceps-lateral-head" class="muscle-region"
-      cx="142" cy="98" rx="6" ry="15"/>
+    <!-- triceps-lateral-head — outer back of upper arm -->
+    <path id="triceps-lateral-head" class="muscle-region"
+      d="M 127,94 L 139,91 L 140,152 L 128,150 Z
+         M 221,91 L 233,94 L 232,150 L 220,152 Z"/>
 
-    <!-- Forearm extensors — back of forearm -->
-    <ellipse id="forearm-extensors" class="muscle-region"
-      cx="143" cy="138" rx="6" ry="12"/>
+    <!-- forearm-extensors — back of forearm -->
+    <path id="forearm-extensors" class="muscle-region"
+      d="M 127,152 L 139,154 L 137,220 L 125,217 Z
+         M 221,154 L 233,152 L 235,217 L 223,220 Z"/>
 
-    <!-- Erector spinae — runs alongside spine -->
-    <ellipse id="erector-spinae" class="muscle-region"
-      cx="180" cy="140" rx="9" ry="30"/>
+    <!-- erector-spinae — bilateral columns alongside spine -->
+    <path id="erector-spinae" class="muscle-region"
+      d="M 169,96 L 179,96 L 178,172 L 168,172 Z
+         M 181,96 L 191,96 L 192,172 L 182,172 Z"/>
 
-    <!-- Multifidus — deep alongside spine -->
-    <ellipse id="multifidus" class="muscle-region"
-      cx="180" cy="152" rx="5" ry="18"/>
+    <!-- multifidus — deep spinal stabiliser -->
+    <path id="multifidus" class="muscle-region"
+      d="M 172,152 L 188,152 L 188,176 L 172,176 Z"/>
 
-    <!-- Quadratus lumborum — lower back sides -->
-    <ellipse id="quadratus-lumborum" class="muscle-region"
-      cx="171" cy="158" rx="8" ry="11"/>
+    <!-- quadratus-lumborum — lower back lateral to spine -->
+    <path id="quadratus-lumborum" class="muscle-region"
+      d="M 152,154 L 169,152 L 169,176 L 152,176 Z
+         M 191,152 L 208,154 L 208,176 L 191,176 Z"/>
 
-    <!-- Gluteus maximus — main glute mass -->
-    <ellipse id="gluteus-maximus" class="muscle-region"
-      cx="180" cy="184" rx="22" ry="20"/>
+    <!-- gluteus-maximus — large glute mass -->
+    <path id="gluteus-maximus" class="muscle-region"
+      d="M 150,178 L 178,172 L 180,214 L 153,218 Z
+         M 182,172 L 210,178 L 207,218 L 180,214 Z"/>
 
-    <!-- Gluteus medius — upper-outer glute -->
-    <ellipse id="gluteus-medius" class="muscle-region"
-      cx="166" cy="168" rx="12" ry="11"/>
+    <!-- gluteus-medius — upper-outer glute fan -->
+    <path id="gluteus-medius" class="muscle-region"
+      d="M 145,163 L 167,159 L 169,184 L 147,187 Z
+         M 193,159 L 215,163 L 213,187 L 191,184 Z"/>
 
-    <!-- Gluteus minimus — deep under medius -->
-    <ellipse id="gluteus-minimus" class="muscle-region"
-      cx="167" cy="178" rx="9" ry="8"/>
+    <!-- gluteus-minimus — deep under medius -->
+    <path id="gluteus-minimus" class="muscle-region"
+      d="M 150,167 L 167,164 L 168,186 L 151,188 Z
+         M 193,164 L 210,167 L 209,188 L 192,186 Z"/>
 
-    <!-- Piriformis — deep external hip rotator -->
-    <ellipse id="piriformis" class="muscle-region"
-      cx="180" cy="190" rx="10" ry="7"/>
+    <!-- piriformis — deep horizontal hip rotator -->
+    <path id="piriformis" class="muscle-region"
+      d="M 157,192 L 178,189 L 178,202 L 157,205 Z
+         M 182,189 L 203,192 L 203,205 L 182,202 Z"/>
 
-    <!-- Biceps femoris — outer hamstring -->
-    <ellipse id="biceps-femoris" class="muscle-region"
-      cx="172" cy="236" rx="9" ry="27"/>
+    <!-- biceps-femoris — outer hamstring -->
+    <path id="biceps-femoris" class="muscle-region"
+      d="M 151,214 L 165,212 L 164,308 L 150,306 Z
+         M 195,212 L 209,214 L 210,306 L 196,308 Z"/>
 
-    <!-- Semitendinosus — inner hamstring -->
-    <ellipse id="semitendinosus" class="muscle-region"
-      cx="184" cy="236" rx="8" ry="27"/>
+    <!-- semitendinosus — middle hamstring -->
+    <path id="semitendinosus" class="muscle-region"
+      d="M 162,214 L 173,214 L 172,310 L 161,310 Z
+         M 187,214 L 198,214 L 199,310 L 188,310 Z"/>
 
-    <!-- Semimembranosus — deep inner hamstring -->
-    <ellipse id="semimembranosus" class="muscle-region"
-      cx="189" cy="234" rx="6" ry="21"/>
+    <!-- semimembranosus — deep inner hamstring -->
+    <path id="semimembranosus" class="muscle-region"
+      d="M 165,216 L 174,216 L 173,306 L 164,306 Z
+         M 186,216 L 195,216 L 196,306 L 187,306 Z"/>
 
-    <!-- Gastrocnemius — calf diamond -->
-    <ellipse id="gastrocnemius" class="muscle-region"
-      cx="180" cy="320" rx="14" ry="22"/>
+    <!-- gastrocnemius — calf diamond -->
+    <path id="gastrocnemius" class="muscle-region"
+      d="M 150,316 L 167,312 L 170,364 L 157,370 L 147,356 Z
+         M 193,312 L 210,316 L 213,356 L 200,370 L 190,364 Z"/>
 
-    <!-- Soleus — lower calf, beneath gastrocnemius -->
-    <ellipse id="soleus" class="muscle-region"
-      cx="180" cy="346" rx="11" ry="17"/>
+    <!-- soleus — under gastrocnemius, lower calf -->
+    <path id="soleus" class="muscle-region"
+      d="M 152,359 L 168,356 L 167,386 L 152,386 Z
+         M 192,356 L 208,359 L 208,386 L 193,386 Z"/>
 
   </g>
 
-  <!-- Labels -->
-  <text x="60" y="395" text-anchor="middle" fill="#444" font-size="8" font-family="sans-serif">FRONT</text>
-  <text x="180" y="395" text-anchor="middle" fill="#444" font-size="8" font-family="sans-serif">BACK</text>
+  <text x="60"  y="397" text-anchor="middle" fill="#555" font-size="8" font-family="sans-serif">FRONT</text>
+  <text x="180" y="397" text-anchor="middle" fill="#555" font-size="8" font-family="sans-serif">BACK</text>
 </svg>
