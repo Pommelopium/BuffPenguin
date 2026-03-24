@@ -3,134 +3,285 @@
   muscle-overlay.svg — BuffPenguin mirror display
   ================================================
   This SVG has TWO layers:
-    1. "silhouette"     — grey body outline (background reference)
-    2. "muscle-regions" — colored overlay regions, one <path> per muscle group
+    1. "silhouette"      — grey body outline (background reference)
+    2. "muscle-regions"  — colored overlay regions, one element per muscle group
 
-  Each muscle-region path has:
-    id="[slug]"           e.g. id="chest"
+  Each muscle-region element has:
+    id="[slug]"           e.g. id="rectus-femoris"
     class="muscle-region" (required for CSS freshness coloring)
 
-  TODO: Open this file in Inkscape and draw the actual muscle region shapes.
-  The placeholder ellipses below show approximate body positions but need
-  to be replaced with accurate anatomical polygon paths.
+  TODO: Open this file in Inkscape and draw accurate muscle region shapes.
+  The placeholder ellipses show approximate anatomical positions but need
+  to be replaced with accurate polygon paths for a polished display.
 
-  Anterior figure occupies x: 10–110, y: 0–380
-  Posterior figure occupies x: 120–220, y: 0–380
-  Total viewBox: 0 0 230 400
+  Anterior figure occupies x: 10–110, y: 0–380  (centred at x=60)
+  Posterior figure occupies x: 130–230, y: 0–380  (centred at x=180)
+  Total viewBox: 0 0 240 400
+
+  Slugs used (50 total):
+    Front: sternocleidomastoid, pectoralis-major-upper, pectoralis-major-lower,
+           serratus-anterior, anterior-deltoid, lateral-deltoid, biceps-brachii,
+           brachialis, brachioradialis, forearm-flexors, rectus-abdominis,
+           external-obliques, internal-obliques, transversus-abdominis, iliopsoas,
+           tensor-fasciae-latae, sartorius, rectus-femoris, vastus-lateralis,
+           vastus-medialis, adductor-magnus, adductor-longus, gracilis,
+           tibialis-anterior, peroneus-longus
+    Back:  upper-trapezius, middle-trapezius, lower-trapezius, rhomboids,
+           posterior-deltoid, infraspinatus, teres-minor, teres-major,
+           subscapularis, latissimus-dorsi, triceps-long-head, triceps-lateral-head,
+           forearm-extensors, erector-spinae, multifidus, quadratus-lumborum,
+           gluteus-maximus, gluteus-medius, gluteus-minimus, piriformis,
+           biceps-femoris, semitendinosus, semimembranosus, gastrocnemius, soleus
 -->
 <svg
   xmlns="http://www.w3.org/2000/svg"
-  viewBox="0 0 230 400"
+  viewBox="0 0 240 400"
   version="1.1"
 >
   <!-- ======================== -->
   <!-- LAYER 1: Body silhouette -->
   <!-- ======================== -->
   <g id="silhouette" opacity="0.25" fill="#aaaaaa">
-    <!-- Anterior (front) rough silhouette -->
-    <!-- Head -->
+    <!-- Anterior (front) rough silhouette — centred at x=60 -->
     <ellipse cx="60" cy="30" rx="18" ry="22"/>
-    <!-- Neck -->
     <rect x="54" y="50" width="12" height="15"/>
-    <!-- Torso -->
     <rect x="36" y="65" width="48" height="100" rx="6"/>
-    <!-- Left arm -->
     <rect x="18" y="68" width="16" height="80" rx="6"/>
-    <!-- Right arm -->
     <rect x="86" y="68" width="16" height="80" rx="6"/>
-    <!-- Hips/Pelvis -->
     <rect x="34" y="162" width="52" height="30" rx="4"/>
-    <!-- Left leg -->
-    <rect x="34" y="190" width="22" height="120" rx="6"/>
-    <!-- Right leg -->
-    <rect x="64" y="190" width="22" height="120" rx="6"/>
-    <!-- Left calf -->
-    <rect x="36" y="308" width="18" height="60" rx="5"/>
-    <!-- Right calf -->
-    <rect x="66" y="308" width="18" height="60" rx="5"/>
+    <rect x="34" y="190" width="22" height="118" rx="6"/>
+    <rect x="64" y="190" width="22" height="118" rx="6"/>
+    <rect x="36" y="305" width="18" height="65" rx="5"/>
+    <rect x="66" y="305" width="18" height="65" rx="5"/>
 
-    <!-- Posterior (back) rough silhouette — offset x+120 -->
-    <!-- Head -->
+    <!-- Posterior (back) rough silhouette — centred at x=180 -->
     <ellipse cx="180" cy="30" rx="18" ry="22"/>
-    <!-- Neck -->
     <rect x="174" y="50" width="12" height="15"/>
-    <!-- Torso/Back -->
     <rect x="156" y="65" width="48" height="100" rx="6"/>
-    <!-- Left arm -->
     <rect x="138" y="68" width="16" height="80" rx="6"/>
-    <!-- Right arm -->
     <rect x="206" y="68" width="16" height="80" rx="6"/>
-    <!-- Glutes -->
     <rect x="154" y="162" width="52" height="40" rx="4"/>
-    <!-- Left leg (hamstrings) -->
-    <rect x="154" y="200" width="22" height="110" rx="6"/>
-    <!-- Right leg (hamstrings) -->
-    <rect x="184" y="200" width="22" height="110" rx="6"/>
-    <!-- Left calf -->
-    <rect x="156" y="308" width="18" height="60" rx="5"/>
-    <!-- Right calf -->
-    <rect x="186" y="308" width="18" height="60" rx="5"/>
+    <rect x="154" y="200" width="22" height="108" rx="6"/>
+    <rect x="184" y="200" width="22" height="108" rx="6"/>
+    <rect x="156" y="305" width="18" height="65" rx="5"/>
+    <rect x="186" y="305" width="18" height="65" rx="5"/>
   </g>
 
-  <!-- ========================== -->
-  <!-- LAYER 2: Muscle region overlays -->
-  <!-- Each path: id=[slug], class="muscle-region" -->
-  <!-- CSS in MMM-BuffPenguin.css adds color based on freshness -->
-  <!-- ========================== -->
+  <!-- ======================================= -->
+  <!-- LAYER 2: Muscle region overlays         -->
+  <!-- id=[slug], class="muscle-region"        -->
+  <!-- CSS in MMM-BuffPenguin.css adds color   -->
+  <!-- based on freshness bucket               -->
+  <!-- ======================================= -->
   <g id="muscle-regions">
 
-    <!-- ===== ANTERIOR (FRONT) regions — x: 10–110 ===== -->
+    <!-- ===== ANTERIOR (FRONT) regions ===== -->
 
-    <!-- NECK -->
-    <ellipse id="neck" class="muscle-region"
-      cx="60" cy="58" rx="9" ry="8"/>
+    <!-- Neck / sternocleidomastoid — side of neck -->
+    <ellipse id="sternocleidomastoid" class="muscle-region"
+      cx="60" cy="55" rx="7" ry="7"/>
 
-    <!-- CHEST -->
-    <ellipse id="chest" class="muscle-region"
-      cx="60" cy="95" rx="20" ry="18"/>
+    <!-- Upper chest -->
+    <ellipse id="pectoralis-major-upper" class="muscle-region"
+      cx="60" cy="83" rx="20" ry="9"/>
 
-    <!-- SHOULDERS (deltoids — both sides shown anterior) -->
-    <ellipse id="shoulders" class="muscle-region"
-      cx="60" cy="75" rx="30" ry="10"/>
+    <!-- Lower chest -->
+    <ellipse id="pectoralis-major-lower" class="muscle-region"
+      cx="60" cy="100" rx="20" ry="10"/>
 
-    <!-- BICEPS (anterior upper arm) -->
-    <!-- Left bicep -->
-    <ellipse class="muscle-region" id="biceps"
-      cx="26" cy="100" rx="7" ry="18"/>
+    <!-- Serratus anterior — side of ribs -->
+    <ellipse id="serratus-anterior" class="muscle-region"
+      cx="38" cy="118" rx="7" ry="14"/>
 
-    <!-- TRICEPS (visible from front as lateral arm) -->
-    <ellipse id="triceps" class="muscle-region"
-      cx="95" cy="100" rx="7" ry="18"/>
+    <!-- Anterior deltoid — front of shoulder -->
+    <ellipse id="anterior-deltoid" class="muscle-region"
+      cx="32" cy="74" rx="9" ry="10"/>
 
-    <!-- FOREARMS -->
-    <ellipse id="forearms" class="muscle-region"
-      cx="23" cy="135" rx="6" ry="14"/>
+    <!-- Lateral deltoid — outer shoulder -->
+    <ellipse id="lateral-deltoid" class="muscle-region"
+      cx="21" cy="72" rx="6" ry="9"/>
 
-    <!-- THIGHS (quadriceps, anterior) -->
-    <ellipse id="thighs" class="muscle-region"
-      cx="60" cy="230" rx="24" ry="35"/>
+    <!-- Biceps brachii — front upper arm -->
+    <ellipse id="biceps-brachii" class="muscle-region"
+      cx="26" cy="98" rx="7" ry="17"/>
 
-    <!-- CALVES (anterior, tibialis) -->
-    <ellipse id="calves" class="muscle-region"
-      cx="60" cy="330" rx="18" ry="28"/>
+    <!-- Brachialis — lower upper arm, elbow area -->
+    <ellipse id="brachialis" class="muscle-region"
+      cx="27" cy="120" rx="6" ry="9"/>
 
-    <!-- ===== POSTERIOR (BACK) regions — x: 130–230 ===== -->
+    <!-- Brachioradialis — upper forearm -->
+    <ellipse id="brachioradialis" class="muscle-region"
+      cx="24" cy="136" rx="6" ry="9"/>
 
-    <!-- BACK (trapezius + latissimus dorsi) -->
-    <ellipse id="back" class="muscle-region"
-      cx="180" cy="110" rx="24" ry="40"/>
+    <!-- Forearm flexors — lower forearm -->
+    <ellipse id="forearm-flexors" class="muscle-region"
+      cx="23" cy="152" rx="5" ry="10"/>
 
-    <!-- GLUTES -->
-    <ellipse id="glutes" class="muscle-region"
-      cx="180" cy="178" rx="24" ry="20"/>
+    <!-- Rectus abdominis — centre of abs -->
+    <ellipse id="rectus-abdominis" class="muscle-region"
+      cx="60" cy="130" rx="10" ry="22"/>
 
-    <!-- HAMSTRINGS (posterior thigh) -->
-    <ellipse id="hamstrings" class="muscle-region"
-      cx="180" cy="240" rx="22" ry="35"/>
+    <!-- External obliques — sides of abs -->
+    <ellipse id="external-obliques" class="muscle-region"
+      cx="44" cy="130" rx="8" ry="18"/>
+
+    <!-- Internal obliques — deeper, slightly medial -->
+    <ellipse id="internal-obliques" class="muscle-region"
+      cx="48" cy="142" rx="7" ry="12"/>
+
+    <!-- Transversus abdominis — deep lower abdomen -->
+    <ellipse id="transversus-abdominis" class="muscle-region"
+      cx="60" cy="152" rx="9" ry="7"/>
+
+    <!-- Iliopsoas — hip flexor, groin -->
+    <ellipse id="iliopsoas" class="muscle-region"
+      cx="57" cy="170" rx="11" ry="11"/>
+
+    <!-- Tensor fasciae latae — outer hip -->
+    <ellipse id="tensor-fasciae-latae" class="muscle-region"
+      cx="38" cy="178" rx="7" ry="11"/>
+
+    <!-- Sartorius — diagonal strap across thigh -->
+    <ellipse id="sartorius" class="muscle-region"
+      cx="50" cy="212" rx="5" ry="26"/>
+
+    <!-- Rectus femoris — centre quad -->
+    <ellipse id="rectus-femoris" class="muscle-region"
+      cx="60" cy="228" rx="9" ry="26"/>
+
+    <!-- Vastus lateralis — outer quad -->
+    <ellipse id="vastus-lateralis" class="muscle-region"
+      cx="73" cy="228" rx="8" ry="25"/>
+
+    <!-- Vastus medialis — inner quad (teardrop near knee) -->
+    <ellipse id="vastus-medialis" class="muscle-region"
+      cx="51" cy="244" rx="8" ry="17"/>
+
+    <!-- Adductor magnus — large inner thigh -->
+    <ellipse id="adductor-magnus" class="muscle-region"
+      cx="55" cy="222" rx="8" ry="22"/>
+
+    <!-- Adductor longus — upper inner thigh -->
+    <ellipse id="adductor-longus" class="muscle-region"
+      cx="54" cy="202" rx="7" ry="13"/>
+
+    <!-- Gracilis — thin inner thigh strap -->
+    <ellipse id="gracilis" class="muscle-region"
+      cx="52" cy="238" rx="4" ry="20"/>
+
+    <!-- Tibialis anterior — outer shin -->
+    <ellipse id="tibialis-anterior" class="muscle-region"
+      cx="71" cy="326" rx="7" ry="22"/>
+
+    <!-- Peroneus longus — lateral lower leg -->
+    <ellipse id="peroneus-longus" class="muscle-region"
+      cx="76" cy="336" rx="6" ry="17"/>
+
+    <!-- ===== POSTERIOR (BACK) regions ===== -->
+
+    <!-- Upper trapezius — neck/shoulder top -->
+    <ellipse id="upper-trapezius" class="muscle-region"
+      cx="180" cy="66" rx="22" ry="9"/>
+
+    <!-- Middle trapezius — mid back horizontal -->
+    <ellipse id="middle-trapezius" class="muscle-region"
+      cx="180" cy="88" rx="20" ry="8"/>
+
+    <!-- Lower trapezius — lower-mid back -->
+    <ellipse id="lower-trapezius" class="muscle-region"
+      cx="180" cy="108" rx="15" ry="8"/>
+
+    <!-- Rhomboids — between shoulder blades -->
+    <ellipse id="rhomboids" class="muscle-region"
+      cx="180" cy="86" rx="12" ry="11"/>
+
+    <!-- Posterior deltoid — back of shoulder -->
+    <ellipse id="posterior-deltoid" class="muscle-region"
+      cx="152" cy="76" rx="9" ry="10"/>
+
+    <!-- Infraspinatus — below scapular spine -->
+    <ellipse id="infraspinatus" class="muscle-region"
+      cx="156" cy="96" rx="10" ry="11"/>
+
+    <!-- Teres minor — below infraspinatus -->
+    <ellipse id="teres-minor" class="muscle-region"
+      cx="153" cy="112" rx="7" ry="7"/>
+
+    <!-- Teres major — below teres minor -->
+    <ellipse id="teres-major" class="muscle-region"
+      cx="153" cy="124" rx="7" ry="7"/>
+
+    <!-- Subscapularis — deep under scapula -->
+    <ellipse id="subscapularis" class="muscle-region"
+      cx="162" cy="100" rx="8" ry="11"/>
+
+    <!-- Latissimus dorsi — large back wing -->
+    <ellipse id="latissimus-dorsi" class="muscle-region"
+      cx="170" cy="126" rx="16" ry="28"/>
+
+    <!-- Triceps long head — inner back of upper arm -->
+    <ellipse id="triceps-long-head" class="muscle-region"
+      cx="148" cy="100" rx="7" ry="20"/>
+
+    <!-- Triceps lateral head — outer back of upper arm -->
+    <ellipse id="triceps-lateral-head" class="muscle-region"
+      cx="142" cy="98" rx="6" ry="15"/>
+
+    <!-- Forearm extensors — back of forearm -->
+    <ellipse id="forearm-extensors" class="muscle-region"
+      cx="143" cy="138" rx="6" ry="12"/>
+
+    <!-- Erector spinae — runs alongside spine -->
+    <ellipse id="erector-spinae" class="muscle-region"
+      cx="180" cy="140" rx="9" ry="30"/>
+
+    <!-- Multifidus — deep alongside spine -->
+    <ellipse id="multifidus" class="muscle-region"
+      cx="180" cy="152" rx="5" ry="18"/>
+
+    <!-- Quadratus lumborum — lower back sides -->
+    <ellipse id="quadratus-lumborum" class="muscle-region"
+      cx="171" cy="158" rx="8" ry="11"/>
+
+    <!-- Gluteus maximus — main glute mass -->
+    <ellipse id="gluteus-maximus" class="muscle-region"
+      cx="180" cy="184" rx="22" ry="20"/>
+
+    <!-- Gluteus medius — upper-outer glute -->
+    <ellipse id="gluteus-medius" class="muscle-region"
+      cx="166" cy="168" rx="12" ry="11"/>
+
+    <!-- Gluteus minimus — deep under medius -->
+    <ellipse id="gluteus-minimus" class="muscle-region"
+      cx="167" cy="178" rx="9" ry="8"/>
+
+    <!-- Piriformis — deep external hip rotator -->
+    <ellipse id="piriformis" class="muscle-region"
+      cx="180" cy="190" rx="10" ry="7"/>
+
+    <!-- Biceps femoris — outer hamstring -->
+    <ellipse id="biceps-femoris" class="muscle-region"
+      cx="172" cy="236" rx="9" ry="27"/>
+
+    <!-- Semitendinosus — inner hamstring -->
+    <ellipse id="semitendinosus" class="muscle-region"
+      cx="184" cy="236" rx="8" ry="27"/>
+
+    <!-- Semimembranosus — deep inner hamstring -->
+    <ellipse id="semimembranosus" class="muscle-region"
+      cx="189" cy="234" rx="6" ry="21"/>
+
+    <!-- Gastrocnemius — calf diamond -->
+    <ellipse id="gastrocnemius" class="muscle-region"
+      cx="180" cy="320" rx="14" ry="22"/>
+
+    <!-- Soleus — lower calf, beneath gastrocnemius -->
+    <ellipse id="soleus" class="muscle-region"
+      cx="180" cy="346" rx="11" ry="17"/>
 
   </g>
 
-  <!-- Label: anterior / posterior -->
+  <!-- Labels -->
   <text x="60" y="395" text-anchor="middle" fill="#444" font-size="8" font-family="sans-serif">FRONT</text>
   <text x="180" y="395" text-anchor="middle" fill="#444" font-size="8" font-family="sans-serif">BACK</text>
 </svg>

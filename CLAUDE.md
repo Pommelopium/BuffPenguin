@@ -73,7 +73,7 @@ MagicMirror² `config/config.js` entry:
 - `index.ts` — Fastify server bootstrap; registers all route plugins, starts mDNS after listen
 - `db/schema.ts` — Drizzle schema (single source of truth for DB types and migrations). Tables: `muscle_groups`, `exercises`, `exercise_muscle_groups`, `workout_sessions`, `workout_sets`
 - `db/client.ts` — Singleton `better-sqlite3` + Drizzle connection; reads `DB_PATH` env var
-- `db/seed.ts` — Seeds the 11 muscle groups (run once after first `drizzle-kit push`)
+- `db/seed.ts` — Seeds the 50 muscle groups (run once after first `drizzle-kit push`)
 - `routes/muscleGroups.ts` — The `/api/v1/muscle-groups/freshness` endpoint is the most critical: it joins sets → exercises → exercise_muscle_groups → muscle_groups and computes a `freshness` bucket (`today`, `recent`, `moderate`, `stale`, `untrained`) for each muscle group
 - `mdns.ts` — Advertises `_buffpenguin._tcp.local.` using `@homebridge/ciao` (pure TypeScript, no avahi-daemon needed)
 
@@ -105,4 +105,10 @@ Freshness CSS classes applied to `.muscle-region` paths: `today`, `recent`, `mod
 
 ## SVG Overlay Note
 
-`packages/mirror-module/assets/muscle-overlay.svg` currently contains **placeholder ellipses** for each muscle group region. For the mirror display to look correct, open this file in Inkscape, draw accurate polygon paths over the silhouette, and ensure each path has `id="[slug]"` and `class="muscle-region"`. The 11 slugs are: `neck`, `chest`, `shoulders`, `biceps`, `forearms`, `thighs`, `calves`, `back`, `triceps`, `glutes`, `hamstrings`.
+`packages/mirror-module/assets/muscle-overlay.svg` currently contains **placeholder ellipses** for each muscle group region. For the mirror display to look correct, open this file in Inkscape, draw accurate polygon paths over the silhouette, and ensure each path has `id="[slug]"` and `class="muscle-region"`.
+
+The 50 slugs (25 anterior, 25 posterior):
+
+**Front:** `sternocleidomastoid`, `pectoralis-major-upper`, `pectoralis-major-lower`, `serratus-anterior`, `anterior-deltoid`, `lateral-deltoid`, `biceps-brachii`, `brachialis`, `brachioradialis`, `forearm-flexors`, `rectus-abdominis`, `external-obliques`, `internal-obliques`, `transversus-abdominis`, `iliopsoas`, `tensor-fasciae-latae`, `sartorius`, `rectus-femoris`, `vastus-lateralis`, `vastus-medialis`, `adductor-magnus`, `adductor-longus`, `gracilis`, `tibialis-anterior`, `peroneus-longus`
+
+**Back:** `upper-trapezius`, `middle-trapezius`, `lower-trapezius`, `rhomboids`, `posterior-deltoid`, `infraspinatus`, `teres-minor`, `teres-major`, `subscapularis`, `latissimus-dorsi`, `triceps-long-head`, `triceps-lateral-head`, `forearm-extensors`, `erector-spinae`, `multifidus`, `quadratus-lumborum`, `gluteus-maximus`, `gluteus-medius`, `gluteus-minimus`, `piriformis`, `biceps-femoris`, `semitendinosus`, `semimembranosus`, `gastrocnemius`, `soleus`
