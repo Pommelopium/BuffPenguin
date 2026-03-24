@@ -74,6 +74,7 @@ MagicMirror² `config/config.js` entry:
 - `db/schema.ts` — Drizzle schema (single source of truth for DB types and migrations). Tables: `muscle_groups`, `exercises`, `exercise_muscle_groups`, `workout_sessions`, `workout_sets`
 - `db/client.ts` — Singleton `better-sqlite3` + Drizzle connection; reads `DB_PATH` env var
 - `db/seed.ts` — Seeds the 50 muscle groups (run once after first `drizzle-kit push`)
+- `db/seed-exercises.ts` — Seeds ~70 exercises with muscle group mappings from the PDF reference list (run after `db:seed`)
 - `routes/muscleGroups.ts` — The `/api/v1/muscle-groups/freshness` endpoint is the most critical: it joins sets → exercises → exercise_muscle_groups → muscle_groups and computes a `freshness` bucket (`today`, `recent`, `moderate`, `stale`, `untrained`) for each muscle group
 - `mdns.ts` — Advertises `_buffpenguin._tcp.local.` using `@homebridge/ciao` (pure TypeScript, no avahi-daemon needed)
 

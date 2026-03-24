@@ -77,6 +77,7 @@ Set up the database (run once):
 cd packages/backend
 npx drizzle-kit push
 npm run db:seed
+npm run db:seed-exercises
 cd ../..
 ```
 
@@ -168,24 +169,24 @@ hostname -I
 
 ---
 
-### Adding exercises
+### Adding custom exercises
 
-The database starts empty. Before logging your first workout, add your exercises via the API. You can do this with any HTTP client (e.g. curl):
+The `db:seed-exercises` step above pre-loads ~70 common exercises from the included reference list, covering chest, back, shoulders, quadriceps, hamstrings, biceps, and triceps. The mobile app will show these in its exercise picker immediately.
+
+If you want to add extra exercises, use the API:
 
 ```bash
 # List available muscle groups to get their IDs
 curl http://localhost:3000/api/v1/muscle-groups
 
-# Create an exercise (replace muscle group IDs as needed)
+# Create a custom exercise (replace muscle group IDs as needed)
 curl -X POST http://localhost:3000/api/v1/exercises \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "Barbell Bench Press",
+    "name": "My Custom Exercise",
     "muscle_groups": [
       { "id": 2, "role": "primary" },
       { "id": 9, "role": "secondary" }
     ]
   }'
 ```
-
-The mobile app will then show the exercise in its picker the next time it loads.
