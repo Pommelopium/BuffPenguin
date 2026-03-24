@@ -24,7 +24,7 @@
   <!-- ═══════════════════════════════════════ -->
   <!-- LAYER 1 — body silhouette              -->
   <!-- ═══════════════════════════════════════ -->
-  <g id="silhouette" fill="#aaaaaa" opacity="0.28">
+  <g id="silhouette" fill="none" stroke="#aaaaaa" stroke-width="1" opacity="0.5">
 
     <!-- Anterior (front), centred x=60 -->
     <ellipse cx="60" cy="26" rx="16" ry="21"/>
