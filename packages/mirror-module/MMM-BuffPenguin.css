@@ -34,19 +34,21 @@
   height: auto;
 }
 
-/* All muscle region overlays start transparent */
+/* All muscle region overlays start invisible */
 .muscle-region {
-  fill: transparent;
-  opacity: 0.7;
-  transition: fill 0.6s ease;
+  fill: none;
+  stroke: transparent;
+  stroke-width: 1.5;
+  opacity: 0.85;
+  transition: stroke 0.6s ease;
 }
 
 /* Freshness colour scale — high contrast for mirror visibility */
-.muscle-region.today     { fill: #00ff88; }
-.muscle-region.recent    { fill: #88ff44; }
-.muscle-region.moderate  { fill: #ffaa00; }
-.muscle-region.stale     { fill: #ff4444; }
-.muscle-region.untrained { fill: #222222; }
+.muscle-region.today     { stroke: #00ff88; }
+.muscle-region.recent    { stroke: #88ff44; }
+.muscle-region.moderate  { stroke: #ffaa00; }
+.muscle-region.stale     { stroke: #ff4444; }
+.muscle-region.untrained { stroke: #333333; }
 
 /* Legend */
 .bp-legend {
