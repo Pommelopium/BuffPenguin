@@ -24,10 +24,11 @@ const S = {
 async function req(path, opts = {}) {
   const base = getUrl();
   if (!base) throw new Error('Backend URL not set — check Settings');
+  const hasBody = opts.body !== undefined;
   const res = await fetch(base + path, {
-    headers: { 'Content-Type': 'application/json' },
+    headers: hasBody ? { 'Content-Type': 'application/json' } : {},
     ...opts,
-    body: opts.body !== undefined ? JSON.stringify(opts.body) : undefined,
+    body: hasBody ? JSON.stringify(opts.body) : undefined,
   });
   if (res.status === 204) return null;
   const json = await res.json().catch(() => ({}));
