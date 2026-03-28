@@ -230,6 +230,116 @@ hostname -I
 
 ---
 
+---
+
+## Autostart on Boot (Raspberry Pi)
+
+This section covers running everything automatically when the Pi powers on — no keyboard or monitor needed after initial setup.
+
+### Services overview
+
+| Service | What it runs | Autostart method |
+|---|---|---|
+| Backend API | `node dist/index.js` | systemd (already set up in step 2) |
+| Web app server | `npx serve packages/web -p 3001` | systemd |
+| MagicMirror² | `npm run start` | systemd + X11 autostart |
+
+---
+
+### Web app server autostart
+
+Create a systemd service that serves the static web files on port 3001:
+
+```bash
+sudo bash -c "cat > /etc/systemd/system/buffpenguin-web.service" << EOF
+[Unit]
+Description=BuffPenguin Web App
+After=network.target
+
+[Service]
+Type=simple
+User=$(whoami)
+WorkingDirectory=/home/$(whoami)/BuffPenguin
+ExecStart=/usr/bin/npx serve packages/web -p 3001
+Restart=on-failure
+RestartSec=5
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable buffpenguin-web
+sudo systemctl start buffpenguin-web
+sudo systemctl status buffpenguin-web
+```
+
+The web app will then be available at `http://raspberrypi.local:3001` from any device on the same network.
+
+---
+
+### MagicMirror² autostart
+
+MagicMirror² needs a display, so it is started differently from the backend services — it runs inside the Pi's graphical session rather than as a background daemon.
+
+**1. Enable auto-login to the desktop** (if not already set):
+
+```bash
+sudo raspi-config
+```
+
+Go to **System Options → Boot / Auto Login → Desktop Autologin**. This ensures the graphical session starts on boot without a password prompt.
+
+**2. Create the autostart entry:**
+
+```bash
+mkdir -p ~/.config/autostart
+cat > ~/.config/autostart/magicmirror.desktop << EOF
+[Desktop Entry]
+Type=Application
+Name=MagicMirror
+Exec=bash -c "cd ~/MagicMirror && DISPLAY=:0 npm run start"
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+EOF
+```
+
+MagicMirror² will now launch automatically whenever the desktop session starts.
+
+**3. (Optional) Hide the mouse cursor:**
+
+On a mirror display you don't want a cursor sitting on screen. Install `unclutter`:
+
+```bash
+sudo apt install -y unclutter
+cat >> ~/.config/autostart/unclutter.desktop << EOF
+[Desktop Entry]
+Type=Application
+Name=Unclutter
+Exec=unclutter -idle 0.1 -root
+Hidden=false
+EOF
+```
+
+---
+
+### Verify everything is running
+
+```bash
+sudo systemctl status buffpenguin        # backend API
+sudo systemctl status buffpenguin-web    # web app server
+```
+
+MagicMirror² status can be checked by looking at the display, or by checking its log:
+
+```bash
+journalctl -u display-manager -n 30 --no-pager
+```
+
+---
+
 ### Adding custom exercises
 
 The `db:seed-exercises` step above pre-loads ~70 common exercises from the included reference list, covering chest, back, shoulders, quadriceps, hamstrings, biceps, and triceps. The mobile app and web app will show these in their exercise pickers immediately.
