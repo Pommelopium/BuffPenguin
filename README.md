@@ -37,11 +37,12 @@ Anyone who wants to build this setup at home. The whole system runs locally on a
 **Raspberry Pi**
 - Raspberry Pi 4 (2 GB RAM or more recommended)
 - Raspberry Pi OS 64-bit (Bookworm / Debian 12)
-- Node.js 20 LTS — install via [NodeSource](https://github.com/nodesource/distributions):
+- Node.js 22 LTS — install via [NodeSource](https://github.com/nodesource/distributions):
   ```bash
-  curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+  curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
   sudo apt install -y nodejs
   ```
+  > Node.js 22 is required by MagicMirror² (it uses `node --run` in its install scripts). The backend runs fine on 22 as well.
 - Git:
   ```bash
   sudo apt install -y git
