@@ -8,7 +8,7 @@
 // support multicast), the server continues running normally and the user
 // can fall back to entering the IP manually in the app's settings screen.
 
-import { Bonjour } from "@homebridge/ciao"; // external: pure-TypeScript mDNS/DNS-SD library (no avahi-daemon required)
+import Bonjour from "@homebridge/ciao"; // external: pure-TypeScript mDNS/DNS-SD library (no avahi-daemon required)
 
 export function advertiseMdns(port: number): void {
   try {

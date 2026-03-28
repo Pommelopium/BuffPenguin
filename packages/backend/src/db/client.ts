@@ -21,7 +21,7 @@ mkdirSync(dirname(dbPath), { recursive: true });
 // Open the SQLite file. better-sqlite3 operates synchronously, which is
 // appropriate here — SQLite has no network latency and sync I/O keeps
 // the code straightforward without sacrificing performance on the Pi.
-const sqlite = new Database(dbPath);
+const sqlite: InstanceType<typeof Database> = new Database(dbPath);
 
 // WAL (Write-Ahead Logging) mode allows concurrent reads while a write
 // is in progress, which avoids blocking the mirror module's polling
