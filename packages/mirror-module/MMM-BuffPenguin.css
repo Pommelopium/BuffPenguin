@@ -40,12 +40,17 @@
   height: auto;
 }
 
-/* ── Outline layer ──────────────────────────────────────────────────────────
-   The body silhouette keeps its original Illustrator class-based fills
-   (.outline-front-stX / .outline-back-stX) for shading depth.
-   No overrides needed here — the renamed classes in the inline <style>
-   block handle it automatically.
+/* ── Body silhouette ────────────────────────────────────────────────────────
+   The .bp-silhouette path carries the body outline extracted from the
+   anatomy SVG assets. Override the dark inline fill with a visible white
+   stroke so the body frame shows up on the mirror's black background.
    ────────────────────────────────────────────────────────────────────────── */
+.bp-silhouette {
+  fill: none !important;
+  stroke: #ffffff;
+  stroke-width: 0.8;
+  opacity: 0.5;
+}
 
 /* ── Muscle region overlays ─────────────────────────────────────────────────
    Each muscle group is a <g id="slug" class="muscle-region"> wrapping the
