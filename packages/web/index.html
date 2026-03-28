@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BuffPenguin</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <header class="app-header">
+      <span class="app-logo">BuffPenguin</span>
+      <nav class="app-nav">
+        <button class="nav-btn" data-nav="dashboard">Workouts</button>
+        <button class="nav-btn" data-nav="exercises">Exercises</button>
+        <button class="nav-btn" data-nav="settings">Settings</button>
+      </nav>
+    </header>
+    <main class="app-main" id="main">
+      <div class="loading">Loading…</div>
+    </main>
+    <div id="toast" class="toast hidden"></div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
