@@ -85,17 +85,15 @@ module.exports = NodeHelper.create({
       .trim();
   },
 
-  // Processes a body outline SVG. Keeps the <style> block (for body shading)
-  // but renames all .stX class names to .outline-stX to prevent collisions
-  // when multiple SVGs are inlined in the same document.
+  // Processes a body outline SVG. Strips the Illustrator <style> block and
+  // all class attributes so paths have no explicit fill and inherit from the
+  // parent <g>. External CSS then sets the fill on .bp-outline, giving full
+  // control over the silhouette appearance without CSS filter hacks.
   processOutline(content, side) {
     let inner = this.extractSvgInner(content);
-    const prefix = `outline-${side}-`;
-    // Rename class names in the <style> block
-    inner = inner.replace(/\.st(\d+)\s*\{/g, `.${prefix}st$1 {`);
-    // Rename class attributes on path/g elements
-    inner = inner.replace(/\bclass="st(\d+)"/g, `class="${prefix}st$1"`);
-    return `<g class="bp-outline bp-outline-${side}">${inner}</g>`;
+    inner = inner.replace(/<style[^>]*>[\s\S]*?<\/style>/g, "");
+    inner = inner.replace(/\s+class="[^"]*"/g, "");
+    return `<g class="bp-outline bp-outline-${side}">${inner.trim()}</g>`;
   },
 
   // Processes a single muscle SVG. Strips its <style> block so that path

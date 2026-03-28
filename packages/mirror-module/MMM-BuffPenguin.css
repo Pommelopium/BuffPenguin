@@ -41,15 +41,12 @@
 }
 
 /* ── Body silhouette ────────────────────────────────────────────────────────
-   The body outline is assembled at runtime from Illustrator SVGs whose paths
-   carry dark muted fills (#A89FA8, #998F99, #E9E7E9). On a black mirror
-   background those colours are barely visible. Desaturate + brighten via
-   CSS filter so every path renders as pure white, then dial opacity down
-   for a subtle but clearly visible body frame.
+   The outline SVG has its Illustrator <style> block stripped in node_helper,
+   so paths carry no explicit fill and inherit from this <g>. Setting fill
+   here gives a clean semi-transparent white silhouette on the dark background.
    ────────────────────────────────────────────────────────────────────────── */
 .bp-outline {
-  filter: saturate(0) brightness(3);
-  opacity: 0.45;
+  fill: rgba(255, 255, 255, 0.3);
 }
 
 /* ── Muscle region overlays ─────────────────────────────────────────────────
