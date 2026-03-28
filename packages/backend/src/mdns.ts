@@ -8,25 +8,30 @@
 // support multicast), the server continues running normally and the user
 // can fall back to entering the IP manually in the app's settings screen.
 
-import Bonjour from "@homebridge/ciao"; // external: pure-TypeScript mDNS/DNS-SD library (no avahi-daemon required)
+import ciao from "@homebridge/ciao"; // external: pure-TypeScript mDNS/DNS-SD library (no avahi-daemon required)
 
 export function advertiseMdns(port: number): void {
   try {
-    // Create a Bonjour instance that manages the mDNS socket.
-    const bonjour = Bonjour();
+    // Create a responder that manages the mDNS socket.
+    const responder = ciao.getResponder();
 
-    // Publish the service. The `type` field becomes the DNS-SD service type
-    // (_buffpenguin._tcp.local.) that the mobile app queries for.
+    // Create the service record. The `type` field becomes the DNS-SD service
+    // type (_buffpenguin._tcp.local.) that the mobile app queries for.
     // The TXT record carries the API version and base path so future clients
     // can handle version mismatches gracefully.
-    bonjour.publish({
+    const service = responder.createService({
       name: "BuffPenguin",
       type: "buffpenguin",  // results in _buffpenguin._tcp.local.
       port,
       txt: { version: "1", path: "/api/v1" },
     });
 
-    console.log(`mDNS: advertising _buffpenguin._tcp.local. on port ${port}`);
+    // advertise() is async — fire and forget, logging success or failure.
+    service.advertise().then(() => {
+      console.log(`mDNS: advertising _buffpenguin._tcp.local. on port ${port}`);
+    }).catch((err: unknown) => {
+      console.warn("mDNS advertisement failed (non-fatal):", err);
+    });
   } catch (err) {
     // Swallow the error so a multicast-incapable environment doesn't crash
     // the server. The mobile app's manual IP fallback covers this case.
