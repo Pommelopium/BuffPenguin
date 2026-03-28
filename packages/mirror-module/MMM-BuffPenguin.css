@@ -21,34 +21,54 @@
   padding: 20px;
 }
 
+/* Front and back figures side by side */
 .bp-figures {
   display: flex;
+  flex-direction: row;
+  gap: 16px;
   justify-content: center;
+  align-items: flex-start;
 }
 
-/* The combined SVG (front + back side by side, viewBox 0 0 864 648) */
-.bp-figures svg {
-  width: 320px;
+.bp-figure-wrap {
+  display: flex;
+}
+
+/* Each anatomy SVG — both share viewBox 0 0 432 648 */
+.bp-anatomy-svg {
+  width: 180px;
   height: auto;
 }
 
-/* All muscle region overlays start invisible */
+/* ── Outline layer ──────────────────────────────────────────────────────────
+   The body silhouette keeps its original Illustrator class-based fills
+   (.outline-front-stX / .outline-back-stX) for shading depth.
+   No overrides needed here — the renamed classes in the inline <style>
+   block handle it automatically.
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* ── Muscle region overlays ─────────────────────────────────────────────────
+   Each muscle group is a <g id="slug" class="muscle-region"> wrapping the
+   original Illustrator paths. Because those paths' .stX style rules were
+   stripped in node_helper, their fill is unset and inherits from the <g>.
+   Setting fill on the <g> is therefore enough to colour the whole shape.
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* Default — invisible until a freshness class is applied */
 .muscle-region {
-  fill: none;
-  stroke: transparent;
-  stroke-width: 1.5;
-  opacity: 0.85;
-  transition: stroke 0.6s ease;
+  fill: transparent;
+  opacity: 0.75;
+  transition: fill 0.6s ease;
 }
 
 /* Freshness colour scale — high contrast for mirror visibility */
-.muscle-region.today     { stroke: #00ff88; }
-.muscle-region.recent    { stroke: #88ff44; }
-.muscle-region.moderate  { stroke: #ffaa00; }
-.muscle-region.stale     { stroke: #ff4444; }
-.muscle-region.untrained { stroke: #333333; }
+.muscle-region.today     { fill: #00ff88; }
+.muscle-region.recent    { fill: #88ff44; }
+.muscle-region.moderate  { fill: #ffaa00; }
+.muscle-region.stale     { fill: #ff4444; }
+.muscle-region.untrained { fill: #333333; opacity: 0.4; }
 
-/* Legend */
+/* ── Legend ──────────────────────────────────────────────────────────────── */
 .bp-legend {
   display: flex;
   flex-direction: row;
@@ -77,8 +97,4 @@
   font-size: 0.65em;
   color: #555;
   margin-top: 8px;
-}
-
-.bp-svg-fallback {
-  background: #111;
 }
