@@ -544,9 +544,13 @@ function saveSettings() {
 
 async function testConn() {
   const el = document.getElementById('conn-status');
+  // Read from the input field directly so the user doesn't have to save first
+  const input = document.getElementById('inp-url');
+  const testUrl = (input ? input.value.trim() : getUrl()).replace(/\/$/, '');
   if (el) { el.className = 'conn-status'; el.textContent = 'Testing…'; }
   try {
-    await api.health();
+    const res = await fetch(testUrl + '/health', { signal: AbortSignal.timeout(5000) });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     if (el) { el.className = 'conn-status conn-ok'; el.textContent = '✓ Connected'; }
     toast('Connected!');
   } catch (err) {
