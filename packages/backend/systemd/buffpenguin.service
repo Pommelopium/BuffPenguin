@@ -4,14 +4,14 @@ After=network.target
 
 [Service]
 Type=simple
-User=pi
-WorkingDirectory=/home/pi/BuffPenguin/packages/backend
+User=YOUR_USERNAME
+WorkingDirectory=/home/YOUR_USERNAME/BuffPenguin/packages/backend
 ExecStart=/usr/bin/node dist/index.js
 Restart=on-failure
 RestartSec=5
 Environment=NODE_ENV=production
 Environment=PORT=3000
-Environment=DB_PATH=/home/pi/BuffPenguin/packages/backend/data/buffpenguin.db
+Environment=DB_PATH=/home/YOUR_USERNAME/BuffPenguin/packages/backend/data/buffpenguin.db
 
 [Install]
 WantedBy=multi-user.target

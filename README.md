@@ -101,7 +101,9 @@ npm run dev --workspace=packages/backend
 **Run as a background service (Raspberry Pi / Linux)** so the backend starts automatically on boot:
 
 ```bash
-sudo cp packages/backend/systemd/buffpenguin.service /etc/systemd/system/
+# Replace YOUR_USERNAME with your actual Linux username (e.g. buffpenguin, pi, etc.)
+sed "s/YOUR_USERNAME/$(whoami)/g" packages/backend/systemd/buffpenguin.service \
+  | sudo tee /etc/systemd/system/buffpenguin.service
 sudo systemctl daemon-reload
 sudo systemctl enable buffpenguin
 sudo systemctl start buffpenguin
