@@ -4,13 +4,15 @@ A free, self-hosted gym tracking system designed to run at home on a Raspberry P
 
 ## What it does
 
-BuffPenguin is made up of three components:
+BuffPenguin is made up of four components:
 
 **1. Magic Mirror Display** — A high-contrast view (white on black) that shows which muscle groups you have trained in your recent sessions, colour-coded by how long ago you last worked them. This runs on a Raspberry Pi connected to a screen mounted behind a one-sided mirror, so the display is visible through the mirror while the screen itself stays hidden.
 
-**2. Mobile App** — An iOS and Android app where you log your workouts: which exercises you performed, how many sets and reps, and the weight used. The app discovers the backend automatically when your phone is on the same Wi-Fi network as the Pi, and only syncs data locally — no internet connection or cloud account required.
+**2. Web App** — A lightweight browser-based interface for logging workouts and managing exercises with muscle group mappings. No installation required — open `packages/web/index.html` in any browser, point it at the backend URL, and start logging. Works on desktop and mobile.
 
-**3. Backend & Database** — A REST API server running on the same Raspberry Pi as the mirror display. It receives workout data from the mobile app, stores it in a local SQLite database, and serves the muscle group history to the mirror display.
+**3. Mobile App** — An iOS and Android app where you log your workouts: which exercises you performed, how many sets and reps, and the weight used. The app discovers the backend automatically when your phone is on the same Wi-Fi network as the Pi, and only syncs data locally — no internet connection or cloud account required.
+
+**4. Backend & Database** — A REST API server running on the same Raspberry Pi as the mirror display. It receives workout data from the web and mobile apps, stores it in a local SQLite database, and serves the muscle group history to the mirror display.
 
 ## Who it's for
 
@@ -21,6 +23,7 @@ Anyone who wants to build this setup at home. The whole system runs locally on a
 | Component | Technology | Runs on |
 |---|---|---|
 | Mirror display | MagicMirror² module | Raspberry Pi or Windows PC |
+| Web app | Plain HTML / CSS / JS | Any browser |
 | Mobile app | Flutter (iOS & Android) | Your phone |
 | Backend API | Node.js + TypeScript + Fastify | Raspberry Pi or Windows PC |
 | Database | SQLite | Raspberry Pi or Windows PC |
@@ -113,7 +116,39 @@ sudo systemctl status buffpenguin
 
 ---
 
-### 3. Magic Mirror Module
+### 3. Web App
+
+The web app is three static files — no build step, no Node.js, no framework.
+
+**Quickstart (any OS):**
+
+Open `packages/web/index.html` directly in a browser. On first load it takes you to the Settings screen — enter your backend URL (e.g. `http://localhost:3000` for local dev or `http://raspberrypi.local:3000` for a Pi on the same network) and click **Save**. The URL is stored in `localStorage` so you only need to do this once per browser.
+
+**What you can do:**
+
+- **Workouts tab** — start a new session, log sets (exercise + reps + weight), delete mistakes, end the session with optional notes, and browse session history.
+- **Exercises tab** — view all exercises with their primary/secondary muscle group mappings, and add new exercises using the grouped front/back muscle selector.
+- **Settings tab** — update the backend URL and test the connection.
+
+**Serve it over the network (Pi):**
+
+If you want to access the web app from another device (e.g. your phone's browser), serve the folder with any static file server. With Node.js already installed on the Pi:
+
+```bash
+npx serve packages/web -p 3001
+# Web app available at http://raspberrypi.local:3001
+```
+
+Or add it as a systemd service alongside the backend for automatic startup.
+
+> **Tip:** The muscle overlay SVG builder script is also available if you update the anatomy assets. Run it from the repo root:
+> ```powershell
+> powershell -ExecutionPolicy Bypass -File packages/mirror-module/scripts/Build-MuscleOverlay.ps1
+> ```
+
+---
+
+### 4. Magic Mirror Module
 
 MagicMirror² runs on both Raspberry Pi and Windows — the module code is identical on both.
 
@@ -160,7 +195,7 @@ cd ~/MagicMirror && npm run start
 
 ---
 
-### 4. Mobile App (your phone)
+### 5. Mobile App (your phone)
 
 Build from your development machine (not the Pi). Make sure Flutter is installed and a device or emulator is connected.
 
@@ -194,9 +229,13 @@ hostname -I
 
 ### Adding custom exercises
 
-The `db:seed-exercises` step above pre-loads ~70 common exercises from the included reference list, covering chest, back, shoulders, quadriceps, hamstrings, biceps, and triceps. The mobile app will show these in its exercise picker immediately.
+The `db:seed-exercises` step above pre-loads ~70 common exercises from the included reference list, covering chest, back, shoulders, quadriceps, hamstrings, biceps, and triceps. The mobile app and web app will show these in their exercise pickers immediately.
 
-If you want to add extra exercises, use the API:
+**Easiest way — use the web app:**
+
+Open the **Exercises** tab in `packages/web/index.html`, type a name, tick the muscle groups it targets (selecting primary or secondary for each), and click **Save Exercise**.
+
+**Via the API directly:**
 
 ```bash
 # List available muscle groups to get their IDs
