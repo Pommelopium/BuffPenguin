@@ -45,6 +45,10 @@ export class WeightView {
                      placeholder="75.0" ${latest ? `value="${latest.weightKg}"` : ''}>
             </div>
             <div class="form-group">
+              <label class="form-label">${t('common.date')}</label>
+              <input class="form-input" type="date" id="inp-weight-date" value="${new Date().toISOString().slice(0, 10)}">
+            </div>
+            <div class="form-group">
               <label class="form-label">${t('weight.notes')}</label>
               <input class="form-input" type="text" id="inp-weight-notes" placeholder="${t('weight.notesPlaceholder')}">
             </div>
@@ -76,13 +80,17 @@ export class WeightView {
   async logWeight() {
     const { api, i18n } = this.app;
     const weight = parseFloat(document.getElementById('inp-body-weight').value);
+    const dateStr = document.getElementById('inp-weight-date').value;
     const notes = document.getElementById('inp-weight-notes').value.trim() || undefined;
     if (!weight || weight < 20 || weight > 300) {
       this.app.toast(i18n.t('weight.invalidWeight'), 'err');
       return;
     }
+    const recorded_at = dateStr
+      ? Math.floor(new Date(dateStr + 'T12:00:00').getTime() / 1000)
+      : undefined;
     try {
-      await api.addWeight({ weight_kg: weight, notes });
+      await api.addWeight({ weight_kg: weight, notes, recorded_at });
       this.app.toast(i18n.t('toast.saved'));
       this.render();
     } catch (err) {

@@ -8,11 +8,11 @@ const service = new WeightService(db);
 
 export async function weightRoutes(app: FastifyInstance) {
 
-  app.post<{ Body: { weight_kg: number; notes?: string } }>(
+  app.post<{ Body: { weight_kg: number; notes?: string; recorded_at?: number } }>(
     "/weight",
     async (req, reply) => {
-      const { weight_kg, notes } = req.body;
-      const result = service.create(weight_kg, notes);
+      const { weight_kg, notes, recorded_at } = req.body;
+      const result = service.create(weight_kg, notes, recorded_at);
       return reply.code(201).send(result);
     }
   );

@@ -8,11 +8,11 @@ import { eq, desc, gte, lte, and } from "drizzle-orm";
 export class WeightService {
   constructor(private db: BetterSQLite3Database<typeof schema>) {}
 
-  create(weightKg: number, notes?: string) {
-    const now = Math.floor(Date.now() / 1000);
+  create(weightKg: number, notes?: string, recordedAt?: number) {
+    const ts = recordedAt ?? Math.floor(Date.now() / 1000);
     return this.db
       .insert(bodyWeight)
-      .values({ weightKg, recordedAt: now, notes: notes ?? null })
+      .values({ weightKg, recordedAt: ts, notes: notes ?? null })
       .returning()
       .get();
   }

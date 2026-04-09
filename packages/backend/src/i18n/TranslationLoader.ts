@@ -1,7 +1,7 @@
 // TranslationLoader.ts — Loads and caches translation files.
 // Falls back to English if a requested locale or key is not found.
 
-import { readFileSync } from "fs";
+import { readFileSync, existsSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
@@ -12,6 +12,12 @@ interface Translations {
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+// When running from dist/i18n/, the JSON files are in src/i18n/.
+// Resolve the i18n directory so it works from both src/ and dist/.
+const i18nDir = existsSync(join(__dirname, "en.json"))
+  ? __dirname
+  : join(__dirname, "../../src/i18n");
+
 export class TranslationLoader {
   private cache = new Map<string, Translations>();
   private supportedLocales = ["en", "de"];
@@ -21,7 +27,7 @@ export class TranslationLoader {
     if (cached) return cached;
 
     try {
-      const filePath = join(__dirname, `${locale}.json`);
+      const filePath = join(i18nDir, `${locale}.json`);
       const data = JSON.parse(readFileSync(filePath, "utf-8")) as Translations;
       this.cache.set(locale, data);
       return data;
