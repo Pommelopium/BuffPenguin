@@ -72,6 +72,12 @@ npm run dev --workspace=packages/backend
 
 ### 3. Web app
 
+Generate the muscle anatomy SVGs (required once, or after updating SVG assets):
+
+```bash
+npm run build:svgs
+```
+
 Open `packages/web/index.html` in a browser, go to Settings, enter the backend URL (`http://localhost:3000` or `http://raspberrypi.local:3000`), and save.
 
 To serve it over the network:
@@ -81,6 +87,8 @@ npx serve packages/web -p 3001
 ```
 
 **Tabs:** Workouts (log sets, browse history), Exercises (view/create with muscle group mappings), Weight (log body weight), Calories (log daily intake), Settings (backend URL).
+
+**Muscle overlay:** During an active workout, a muscle anatomy diagram highlights which muscle groups you've trained as you log sets. The same overlay appears when viewing a past session, showing all muscles that were worked.
 
 ### 4. Mirror modules
 
