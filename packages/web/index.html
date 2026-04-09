@@ -13,14 +13,20 @@
       <nav class="app-nav">
         <button class="nav-btn" data-nav="dashboard">Workouts</button>
         <button class="nav-btn" data-nav="exercises">Exercises</button>
+        <button class="nav-btn" data-nav="weight">Weight</button>
+        <button class="nav-btn" data-nav="calories">Calories</button>
         <button class="nav-btn" data-nav="settings">Settings</button>
       </nav>
+      <select id="lang-select" class="lang-select">
+        <option value="en">EN</option>
+        <option value="de">DE</option>
+      </select>
     </header>
     <main class="app-main" id="main">
       <div class="loading">Loading…</div>
     </main>
     <div id="toast" class="toast hidden"></div>
   </div>
-  <script src="app.js"></script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>

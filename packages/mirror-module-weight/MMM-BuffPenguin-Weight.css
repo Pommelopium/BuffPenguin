@@ -1,0 +1,34 @@
+/* MMM-BuffPenguin-Weight — Styles for the body weight line chart module. */
+
+.MMM-BuffPenguin-Weight {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #fff;
+  font-family: inherit;
+}
+
+.bpw-title {
+  font-size: 1.2em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+
+.bpw-loading,
+.bpw-no-data {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.bpw-chart-wrap {
+  width: 320px;
+  height: 180px;
+}
+
+.bpw-updated {
+  font-size: 0.65em;
+  color: #555;
+  margin-top: 6px;
+}

@@ -1,0 +1,6 @@
+{
+  "name": "MMM-BuffPenguin-Calories",
+  "version": "1.0.0",
+  "description": "MagicMirror² module to display calorie intake vs TDEE as a line graph",
+  "main": "MMM-BuffPenguin-Calories.js"
+}

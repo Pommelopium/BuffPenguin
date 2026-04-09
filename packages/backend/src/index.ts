@@ -9,6 +9,9 @@ import { healthRoutes } from "./routes/health.js";
 import { workoutRoutes } from "./routes/workouts.js";
 import { exerciseRoutes } from "./routes/exercises.js";
 import { muscleGroupRoutes } from "./routes/muscleGroups.js";
+import { i18nRoutes } from "./routes/i18n.js";
+import { weightRoutes } from "./routes/weight.js";
+import { calorieRoutes } from "./routes/calories.js";
 import { advertiseMdns } from "./mdns.js";
 
 // Create the Fastify instance with built-in pino logger enabled.
@@ -27,6 +30,9 @@ await app.register(healthRoutes);
 await app.register(workoutRoutes, { prefix: "/api/v1" });
 await app.register(exerciseRoutes, { prefix: "/api/v1" });
 await app.register(muscleGroupRoutes, { prefix: "/api/v1" });
+await app.register(i18nRoutes, { prefix: "/api/v1" });
+await app.register(weightRoutes, { prefix: "/api/v1" });
+await app.register(calorieRoutes, { prefix: "/api/v1" });
 
 // Read port from environment so the systemd service file can override it
 // without changing code. Defaults to 3000.

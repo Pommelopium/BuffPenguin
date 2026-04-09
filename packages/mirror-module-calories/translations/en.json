@@ -1,0 +1,13 @@
+{
+  "TITLE": "Calorie Tracking",
+  "ACTUAL_INTAKE": "Actual Intake",
+  "SEDENTARY": "Sedentary",
+  "LIGHTLY_ACTIVE": "Lightly Active",
+  "MODERATELY_ACTIVE": "Moderately Active",
+  "VERY_ACTIVE": "Very Active",
+  "EXTRA_ACTIVE": "Extra Active",
+  "NO_DATA": "No calorie data",
+  "NO_WEIGHT": "No weight data for TDEE",
+  "UPDATED_JUST_NOW": "Updated just now",
+  "UPDATED_AGO": "Updated {MINUTES} min ago"
+}

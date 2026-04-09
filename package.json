@@ -4,7 +4,9 @@
   "private": true,
   "workspaces": [
     "packages/backend",
-    "packages/mirror-module"
+    "packages/mirror-module",
+    "packages/mirror-module-weight",
+    "packages/mirror-module-calories"
   ],
   "scripts": {
     "build": "npm run build --workspace=packages/backend",

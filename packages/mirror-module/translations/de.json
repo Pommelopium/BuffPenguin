@@ -1,0 +1,10 @@
+{
+  "TITLE": "Zuletzt trainiert",
+  "LOADING": "Laden…",
+  "LEGEND_TODAY": "Heute",
+  "LEGEND_RECENT": "1–3 Tage",
+  "LEGEND_MODERATE": "4–6 Tage",
+  "LEGEND_STALE": "7+ Tage",
+  "UPDATED_JUST_NOW": "Gerade aktualisiert",
+  "UPDATED_AGO": "Aktualisiert vor {MINUTES} Min."
+}

@@ -28,7 +28,13 @@ html, body { height: 100%; background: var(--bg); color: var(--text);
 }
 .app-logo { font-size: 1rem; font-weight: 800; color: var(--accent); letter-spacing: 0.04em; }
 
-.app-nav { display: flex; gap: 2px; }
+.app-nav { display: flex; gap: 2px; flex-wrap: wrap; }
+.lang-select {
+  background: var(--surface2); border: 1px solid var(--border); color: var(--text);
+  border-radius: var(--radius-sm); padding: 4px 8px; font-size: 0.78rem; font-weight: 600;
+  cursor: pointer; flex-shrink: 0;
+}
+.lang-select:focus { outline: none; border-color: var(--accent); }
 .nav-btn {
   background: none; border: none; color: var(--muted);
   padding: 6px 12px; border-radius: var(--radius-sm);

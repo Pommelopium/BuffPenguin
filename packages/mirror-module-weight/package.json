@@ -1,0 +1,6 @@
+{
+  "name": "MMM-BuffPenguin-Weight",
+  "version": "1.0.0",
+  "description": "MagicMirror² module to display body weight as a line graph",
+  "main": "MMM-BuffPenguin-Weight.js"
+}

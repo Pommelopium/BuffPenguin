@@ -1,0 +1,13 @@
+{
+  "TITLE": "Kalorientracking",
+  "ACTUAL_INTAKE": "Tatsächliche Aufnahme",
+  "SEDENTARY": "Sitzend",
+  "LIGHTLY_ACTIVE": "Leicht Aktiv",
+  "MODERATELY_ACTIVE": "Mäßig Aktiv",
+  "VERY_ACTIVE": "Sehr Aktiv",
+  "EXTRA_ACTIVE": "Extra Aktiv",
+  "NO_DATA": "Keine Kaloriendaten",
+  "NO_WEIGHT": "Keine Gewichtsdaten für TDEE",
+  "UPDATED_JUST_NOW": "Gerade aktualisiert",
+  "UPDATED_AGO": "Aktualisiert vor {MINUTES} Min."
+}

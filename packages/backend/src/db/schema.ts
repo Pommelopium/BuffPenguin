@@ -71,9 +71,32 @@ export const workoutSets = sqliteTable("workout_sets", {
   loggedAt: integer("logged_at").notNull(),   // Unix epoch seconds — used by freshness calculation
 });
 
+// Stores body weight measurements over time.
+// Used by the MMM-BuffPenguin-Weight mirror module for a line graph
+// and by the calorie module for BMR calculations.
+export const bodyWeight = sqliteTable("body_weight", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  weightKg: real("weight_kg").notNull(),
+  recordedAt: integer("recorded_at").notNull(), // Unix epoch seconds
+  notes: text("notes"),
+});
+
+// Stores individual calorie entries (e.g. meals, snacks).
+// Multiple entries per day are allowed and summed for daily totals.
+// The date column uses YYYY-MM-DD text format since calorie tracking is day-scoped.
+export const calorieEntries = sqliteTable("calorie_entries", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  calories: integer("calories").notNull(),
+  date: text("date").notNull(),              // YYYY-MM-DD
+  notes: text("notes"),
+  recordedAt: integer("recorded_at").notNull(), // Unix epoch seconds
+});
+
 // Inferred TypeScript types for use across the codebase.
 // These stay in sync with the schema automatically — no manual maintenance needed.
 export type MuscleGroup = typeof muscleGroups.$inferSelect;
 export type Exercise = typeof exercises.$inferSelect;
 export type WorkoutSession = typeof workoutSessions.$inferSelect;
 export type WorkoutSet = typeof workoutSets.$inferSelect;
+export type BodyWeight = typeof bodyWeight.$inferSelect;
+export type CalorieEntry = typeof calorieEntries.$inferSelect;

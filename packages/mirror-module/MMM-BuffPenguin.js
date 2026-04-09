@@ -25,8 +25,8 @@ Module.register("MMM-BuffPenguin", {
 
   // Called by MagicMirror² when the module is initialised.
   start() {
-    Log.info("MMM-BuffPenguin: Starting module"); // Log is the MM2 logger (external: MagicMirror² global)
-    this.sendSocketNotification("INIT", { // external: MM2 socket bridge to node_helper.js
+    Log.info("MMM-BuffPenguin: Starting module");
+    this.sendSocketNotification("INIT", {
       backendUrl: this.config.backendUrl,
       lookbackDays: this.config.lookbackDays,
     });
@@ -44,7 +44,7 @@ Module.register("MMM-BuffPenguin", {
 
   // Asks node_helper.js to fetch the latest freshness data from the backend.
   fetchFreshness() {
-    this.sendSocketNotification("FETCH_FRESHNESS", { // external: MM2 socket bridge to node_helper.js
+    this.sendSocketNotification("FETCH_FRESHNESS", {
       backendUrl: this.config.backendUrl,
       lookbackDays: this.config.lookbackDays,
     });
@@ -53,16 +53,14 @@ Module.register("MMM-BuffPenguin", {
   // Receives messages from node_helper.js via the MM2 socket bridge.
   socketNotificationReceived(notification, payload) {
     if (notification === "MUSCLE_ASSETS") {
-      // The composite SVG strings (front + back) are sent once by node_helper
-      // on INIT. Store them and trigger a DOM rebuild so the figures appear.
       this.muscleAssets = payload;
-      this.updateDom(); // external: MM2 method that calls getDom() and patches the DOM
+      this.updateDom();
     } else if (notification === "FRESHNESS_DATA") {
       this.freshnessData = payload;
       this.lastUpdated = new Date();
-      this.updateDom(); // external: MM2 method
+      this.updateDom();
     } else if (notification === "FRESHNESS_ERROR") {
-      Log.warn("MMM-BuffPenguin: Failed to fetch freshness data:", payload); // external: MM2 logger
+      Log.warn("MMM-BuffPenguin: Failed to fetch freshness data:", payload);
     }
   },
 
@@ -73,20 +71,18 @@ Module.register("MMM-BuffPenguin", {
 
     const title = document.createElement("div");
     title.className = "bp-title";
-    title.textContent = "Last Trained";
+    title.textContent = this.translate("TITLE");
     wrapper.appendChild(title);
 
     if (!this.muscleAssets) {
       const loading = document.createElement("div");
       loading.className = "bp-loading";
-      loading.textContent = "Loading...";
+      loading.textContent = this.translate("LOADING");
       wrapper.appendChild(loading);
       return wrapper;
     }
 
-    // Render front and back SVGs side by side. Each SVG is injected as raw
-    // HTML so the browser creates real SVG DOM nodes — necessary for
-    // querySelectorAll to find the muscle <g> elements by id.
+    // Render front and back SVGs side by side.
     const figureContainer = document.createElement("div");
     figureContainer.className = "bp-figures";
 
@@ -113,8 +109,8 @@ Module.register("MMM-BuffPenguin", {
       updated.className = "bp-updated";
       const minutesAgo = Math.round((Date.now() - this.lastUpdated.getTime()) / 60000);
       updated.textContent = minutesAgo === 0
-        ? "Updated just now"
-        : `Updated ${minutesAgo} min ago`;
+        ? this.translate("UPDATED_JUST_NOW")
+        : this.translate("UPDATED_AGO").replace("{MINUTES}", minutesAgo);
       wrapper.appendChild(updated);
     }
 
@@ -122,15 +118,12 @@ Module.register("MMM-BuffPenguin", {
   },
 
   // Applies a freshness CSS class to each muscle region <g> element.
-  // Searches within container (covers both front and back SVGs) so that
-  // muscles visible on both views (e.g. brachioradialis) are highlighted
-  // in both figures simultaneously.
   applyFreshness(container, groups) {
     const freshClasses = ["today", "recent", "moderate", "stale", "untrained"];
     groups.forEach(({ slug, freshness }) => {
       container.querySelectorAll(`[id="${slug}"]`).forEach((el) => {
         el.classList.remove(...freshClasses);
-        el.classList.add(freshness); // maps to fill colour rules in MMM-BuffPenguin.css
+        el.classList.add(freshness);
       });
     });
   },
@@ -141,16 +134,16 @@ Module.register("MMM-BuffPenguin", {
     legend.className = "bp-legend";
 
     const items = [
-      { cls: "today",     label: "Today"    },
-      { cls: "recent",    label: "1–3 days" },
-      { cls: "moderate",  label: "4–6 days" },
-      { cls: "stale",     label: "7+ days"  },
+      { cls: "today",     key: "LEGEND_TODAY"    },
+      { cls: "recent",    key: "LEGEND_RECENT"   },
+      { cls: "moderate",  key: "LEGEND_MODERATE" },
+      { cls: "stale",     key: "LEGEND_STALE"    },
     ];
 
-    items.forEach(({ cls, label }) => {
+    items.forEach(({ cls, key }) => {
       const item = document.createElement("span");
       item.className = `bp-legend-item ${cls}`;
-      item.textContent = label;
+      item.textContent = this.translate(key);
       legend.appendChild(item);
     });
 
@@ -158,6 +151,14 @@ Module.register("MMM-BuffPenguin", {
   },
 
   getStyles() {
-    return ["MMM-BuffPenguin.css"]; // external: MM2 stylesheet loader
+    return ["MMM-BuffPenguin.css"];
+  },
+
+  // MM2 i18n: point to translations directory with per-locale JSON files.
+  getTranslations() {
+    return {
+      en: "translations/en.json",
+      de: "translations/de.json",
+    };
   },
 });
