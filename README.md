@@ -4,15 +4,19 @@ A free, self-hosted gym tracking system designed to run at home on a Raspberry P
 
 ## What it does
 
-BuffPenguin is made up of four components:
+BuffPenguin is made up of six components:
 
-**1. Magic Mirror Display** — A high-contrast view (white on black) that shows which muscle groups you have trained in your recent sessions, colour-coded by how long ago you last worked them. This runs on a Raspberry Pi connected to a screen mounted behind a one-sided mirror, so the display is visible through the mirror while the screen itself stays hidden.
+**1. Muscle Freshness Mirror Module** — A high-contrast MagicMirror² module (white on black) that shows which muscle groups you have trained in your recent sessions, colour-coded by how long ago you last worked them. This runs on a Raspberry Pi connected to a screen mounted behind a one-sided mirror, so the display is visible through the mirror while the screen itself stays hidden.
 
-**2. Web App** — A lightweight browser-based interface for logging workouts and managing exercises with muscle group mappings. No installation required — open `packages/web/index.html` in any browser, point it at the backend URL, and start logging. Works on desktop and mobile.
+**2. Weight Mirror Module** — A MagicMirror² module that displays a line chart of your body weight over time (past 90 days by default). Useful for tracking trends at a glance on the mirror display.
 
-**3. Mobile App** — An iOS and Android app where you log your workouts: which exercises you performed, how many sets and reps, and the weight used. The app discovers the backend automatically when your phone is on the same Wi-Fi network as the Pi, and only syncs data locally — no internet connection or cloud account required.
+**3. Calorie Mirror Module** — A MagicMirror² module that charts your daily calorie intake against estimated TDEE (Total Daily Energy Expenditure) lines for five activity levels. Uses the Harris-Benedict revised equation with your latest body weight, height, age, and sex.
 
-**4. Backend & Database** — A REST API server running on the same Raspberry Pi as the mirror display. It receives workout data from the web and mobile apps, stores it in a local SQLite database, and serves the muscle group history to the mirror display.
+**4. Web App** — A lightweight browser-based interface for logging workouts, tracking body weight and calorie intake, and managing exercises with muscle group mappings. Supports English and German via a language selector. No installation required — open `packages/web/index.html` in any browser, point it at the backend URL, and start logging. Works on desktop and mobile.
+
+**5. Mobile App** — An iOS and Android app where you log your workouts: which exercises you performed, how many sets and reps, and the weight used. The app discovers the backend automatically when your phone is on the same Wi-Fi network as the Pi, and only syncs data locally — no internet connection or cloud account required.
+
+**6. Backend & Database** — A REST API server running on the same Raspberry Pi as the mirror display. It receives workout data from the web and mobile apps, stores it in a local SQLite database, and serves muscle group freshness, body weight history, and calorie data to the mirror modules. Supports i18n — serves translated muscle group and exercise names in English and German.
 
 ## Who it's for
 
@@ -22,8 +26,10 @@ Anyone who wants to build this setup at home. The whole system runs locally on a
 
 | Component | Technology | Runs on |
 |---|---|---|
-| Mirror display | MagicMirror² module | Raspberry Pi or Windows PC |
-| Web app | Plain HTML / CSS / JS | Any browser |
+| Muscle freshness display | MagicMirror² module (`MMM-BuffPenguin`) | Raspberry Pi or Windows PC |
+| Weight chart | MagicMirror² module (`MMM-BuffPenguin-Weight`) | Raspberry Pi or Windows PC |
+| Calorie chart | MagicMirror² module (`MMM-BuffPenguin-Calories`) | Raspberry Pi or Windows PC |
+| Web app | Plain HTML / CSS / JS (ES modules) | Any browser |
 | Mobile app | Flutter (iOS & Android) | Your phone |
 | Backend API | Node.js + TypeScript + Fastify | Raspberry Pi or Windows PC |
 | Database | SQLite | Raspberry Pi or Windows PC |
@@ -131,7 +137,10 @@ Open `packages/web/index.html` directly in a browser. On first load it takes you
 
 - **Workouts tab** — start a new session, log sets (exercise + reps + weight), delete mistakes, end the session with optional notes, and browse session history.
 - **Exercises tab** — view all exercises with their primary/secondary muscle group mappings, and add new exercises using the grouped front/back muscle selector.
+- **Weight tab** — log body weight entries over time and view your history.
+- **Calories tab** — log daily calorie intake entries and track your eating.
 - **Settings tab** — update the backend URL and test the connection.
+- **Language selector** — switch the entire UI between English and German (EN/DE) using the dropdown in the header.
 
 **Serve it over the network (Pi):**
 
@@ -171,7 +180,25 @@ New-Item -ItemType Junction `
 
 > Adjust the paths above to match where you cloned the repo and installed MagicMirror².
 
-Add the module to your MagicMirror² config file (`config/config.js`):
+Symlink (or junction) the two additional mirror modules the same way:
+
+**Raspberry Pi / Linux:**
+```bash
+ln -s ~/BuffPenguin/packages/mirror-module-weight ~/MagicMirror/modules/MMM-BuffPenguin-Weight
+ln -s ~/BuffPenguin/packages/mirror-module-calories ~/MagicMirror/modules/MMM-BuffPenguin-Calories
+```
+
+**Windows:**
+```powershell
+New-Item -ItemType Junction `
+  -Path "$env:USERPROFILE\MagicMirror\modules\MMM-BuffPenguin-Weight" `
+  -Target "$env:USERPROFILE\BuffPenguin\packages\mirror-module-weight"
+New-Item -ItemType Junction `
+  -Path "$env:USERPROFILE\MagicMirror\modules\MMM-BuffPenguin-Calories" `
+  -Target "$env:USERPROFILE\BuffPenguin\packages\mirror-module-calories"
+```
+
+Add the modules to your MagicMirror² config file (`config/config.js`):
 
 ```js
 {
@@ -182,6 +209,27 @@ Add the module to your MagicMirror² config file (`config/config.js`):
     updateInterval: 60000,   // refresh every 60 seconds
     lookbackDays: 14,        // show training history for the past 14 days
     anatomySex: "male"       // "male" or "female" — selects the anatomy overlay
+  }
+},
+{
+  module: "MMM-BuffPenguin-Weight",
+  position: "bottom_right",
+  config: {
+    backendUrl: "http://localhost:3000",
+    updateInterval: 3600000, // refresh every hour
+    lookbackDays: 90,        // show weight history for the past 90 days
+  }
+},
+{
+  module: "MMM-BuffPenguin-Calories",
+  position: "bottom_right",
+  config: {
+    backendUrl: "http://localhost:3000",
+    updateInterval: 3600000, // refresh every hour
+    lookbackDays: 30,        // show calorie history for the past 30 days
+    yearOfBirth: 1990,       // used for BMR calculation
+    heightCm: 180,           // used for BMR calculation
+    sex: "male",             // "male" or "female" — used for BMR calculation
   }
 }
 ```
@@ -337,6 +385,18 @@ MagicMirror² status can be checked by looking at the display, or by checking it
 ```bash
 journalctl -u display-manager -n 30 --no-pager
 ```
+
+---
+
+### Internationalization (i18n)
+
+BuffPenguin supports **English** and **German**. The language can be switched:
+
+- **Web app** — use the EN/DE dropdown in the header. The choice is saved in `localStorage`.
+- **Mirror modules** — each module loads translations from its own `translations/` folder, using the MagicMirror² language setting.
+- **Backend** — serves translated muscle group and exercise names via `GET /api/v1/i18n/:locale` (e.g. `/api/v1/i18n/de`).
+
+To add a new language, create a new JSON file in each translation directory (`packages/backend/src/i18n/`, `packages/web/i18n/`, and the `translations/` folders in each mirror module) following the existing `en.json` / `de.json` structure.
 
 ---
 
