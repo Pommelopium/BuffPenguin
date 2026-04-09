@@ -290,13 +290,64 @@ hostname -I
 
 This section covers running everything automatically when the Pi powers on — no keyboard or monitor needed after initial setup.
 
-### Services overview
+BuffPenguin has three services that should start on boot:
 
-| Service | What it runs | Autostart method |
-|---|---|---|
-| Backend API | `node dist/index.js` | systemd (already set up in step 2) |
-| Web app server | `npx serve packages/web -p 3001` | systemd |
-| MagicMirror² | `npm run start` | systemd + X11 autostart |
+| Service | What it runs | Port | Autostart method |
+|---|---|---|---|
+| Backend API | `node dist/index.js` | 3000 | systemd (`buffpenguin.service`, set up in step 2) |
+| Web app server | `npx serve packages/web -p 3001` | 3001 | systemd (`buffpenguin-web.service`, set up below) |
+| MagicMirror² | `npm run start` | 8080 | XDG desktop autostart (set up below) |
+
+The backend systemd service is already configured if you followed step 2 above. The remaining two are set up below.
+
+**Quick setup (all commands)** — if you just want to copy-paste everything in one go:
+
+```bash
+# 1. Web app server (systemd)
+sudo bash -c "cat > /etc/systemd/system/buffpenguin-web.service" << EOF
+[Unit]
+Description=BuffPenguin Web App
+After=network.target
+
+[Service]
+Type=simple
+User=$(whoami)
+WorkingDirectory=/home/$(whoami)/BuffPenguin
+ExecStart=/usr/bin/npx serve packages/web -p 3001
+Restart=on-failure
+RestartSec=5
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target
+EOF
+sudo systemctl daemon-reload
+sudo systemctl enable --now buffpenguin-web
+
+# 2. MagicMirror² (desktop autostart)
+mkdir -p ~/.config/autostart
+cat > ~/.config/autostart/magicmirror.desktop << EOF
+[Desktop Entry]
+Type=Application
+Name=MagicMirror
+Exec=bash -c "cd ~/MagicMirror && DISPLAY=:0 npm run start"
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+EOF
+
+# 3. (Optional) Hide mouse cursor on mirror display
+sudo apt install -y unclutter
+cat > ~/.config/autostart/unclutter.desktop << EOF
+[Desktop Entry]
+Type=Application
+Name=Unclutter
+Exec=unclutter -idle 0.1 -root
+Hidden=false
+EOF
+```
+
+The detailed explanations for each service follow below.
 
 ---
 
