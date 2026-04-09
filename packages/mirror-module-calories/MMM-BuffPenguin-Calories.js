@@ -42,10 +42,13 @@ Module.register("MMM-BuffPenguin-Calories", {
     if (notification === "CALORIE_DATA") {
       this.calorieData = payload.dailySums;
       this.latestWeight = payload.latestWeight;
+      this.error = null;
       this.lastUpdated = new Date();
       this.updateDom();
     } else if (notification === "CALORIE_ERROR") {
       Log.warn("MMM-BuffPenguin-Calories: Fetch error:", payload);
+      this.error = payload;
+      this.updateDom();
     }
   },
 
@@ -70,6 +73,14 @@ Module.register("MMM-BuffPenguin-Calories", {
     title.className = "bpc-title";
     title.textContent = this.translate("TITLE");
     wrapper.appendChild(title);
+
+    if (this.error) {
+      const msg = document.createElement("div");
+      msg.className = "bpc-no-data";
+      msg.textContent = `Error: ${this.error}`;
+      wrapper.appendChild(msg);
+      return wrapper;
+    }
 
     if (!this.calorieData) {
       const msg = document.createElement("div");

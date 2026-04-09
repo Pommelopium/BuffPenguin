@@ -34,10 +34,13 @@ Module.register("MMM-BuffPenguin-Weight", {
   socketNotificationReceived(notification, payload) {
     if (notification === "WEIGHT_DATA") {
       this.weightData = payload;
+      this.error = null;
       this.lastUpdated = new Date();
       this.updateDom();
     } else if (notification === "WEIGHT_ERROR") {
       Log.warn("MMM-BuffPenguin-Weight: Fetch error:", payload);
+      this.error = payload;
+      this.updateDom();
     }
   },
 
@@ -49,6 +52,14 @@ Module.register("MMM-BuffPenguin-Weight", {
     title.className = "bpw-title";
     title.textContent = this.translate("TITLE");
     wrapper.appendChild(title);
+
+    if (this.error) {
+      const msg = document.createElement("div");
+      msg.className = "bpw-no-data";
+      msg.textContent = `Error: ${this.error}`;
+      wrapper.appendChild(msg);
+      return wrapper;
+    }
 
     if (!this.weightData || this.weightData.length === 0) {
       const msg = document.createElement("div");
