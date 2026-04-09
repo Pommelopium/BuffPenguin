@@ -1,9 +1,8 @@
 node_modules/
 dist/
 
-# Saved webpages / browser downloads in TopshelfStuff
-TopshelfStuff/github_files/
-TopshelfStuff/*.htm
+# TopshelfStuff — local reference files, not part of the project
+TopshelfStuff/
 *.db
 *.db-shm
 *.db-wal
