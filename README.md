@@ -97,6 +97,12 @@ npm run db:seed-exercises
 cd ../..
 ```
 
+**Reset the database** (if you need to start fresh — this deletes all data and re-seeds):
+
+```bash
+npm run db:reset --workspace=packages/backend
+```
+
 Test that it works:
 
 ```bash

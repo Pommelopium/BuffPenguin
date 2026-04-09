@@ -10,7 +10,8 @@
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
     "db:seed": "tsx src/db/seed.ts",
-    "db:seed-exercises": "tsx src/db/seed-exercises.ts"
+    "db:seed-exercises": "tsx src/db/seed-exercises.ts",
+    "db:reset": "tsx src/db/reset.ts"
   },
   "dependencies": {
     "@fastify/cors": "^9.0.0",
