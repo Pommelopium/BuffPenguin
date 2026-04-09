@@ -1,5 +1,5 @@
 // node_helper.js — Server-side helper for MMM-BuffPenguin-Weight.
-// Fetches body weight data from the BuffPenguin backend.
+// Fetches all body weight data from the BuffPenguin backend.
 
 const NodeHelper = require("node_helper");
 
@@ -14,10 +14,9 @@ module.exports = NodeHelper.create({
     }
   },
 
-  async fetchWeight({ backendUrl, lookbackDays }) {
+  async fetchWeight({ backendUrl }) {
     try {
-      const from = Math.floor(Date.now() / 1000) - lookbackDays * 86400;
-      const url = `${backendUrl}/api/v1/weight?from=${from}`;
+      const url = `${backendUrl}/api/v1/weight`;
       const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();

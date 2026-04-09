@@ -23,14 +23,21 @@
 }
 
 .bpc-chart-wrap {
-  width: 400px;
-  height: 220px;
-  position: relative;
+  line-height: 0;
 }
 
-.bpc-chart-wrap canvas {
-  width: 100% !important;
-  height: 100% !important;
+.bpc-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 0.65em;
+  color: #aaa;
+}
+
+.bpc-legend-item {
+  white-space: nowrap;
 }
 
 .bpc-updated {

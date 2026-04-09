@@ -119,7 +119,7 @@ Add to your MagicMirror² `config/config.js`:
   config: {
     backendUrl: "http://localhost:3000",
     updateInterval: 3600000,
-    lookbackDays: 90,
+    maxLookbackDays: 90,     // max days back from the latest entry
   }
 },
 {
@@ -128,7 +128,7 @@ Add to your MagicMirror² `config/config.js`:
   config: {
     backendUrl: "http://localhost:3000",
     updateInterval: 3600000,
-    lookbackDays: 30,
+    maxLookbackDays: 30,     // max days back from the latest entry
     yearOfBirth: 1990,
     heightCm: 180,
     sex: "male",             // "male" or "female"

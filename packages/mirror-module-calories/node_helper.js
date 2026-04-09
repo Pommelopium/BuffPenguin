@@ -1,5 +1,5 @@
 // node_helper.js — Server-side helper for MMM-BuffPenguin-Calories.
-// Fetches daily calorie sums and the latest body weight from the backend.
+// Fetches all daily calorie sums and the latest body weight from the backend.
 
 const NodeHelper = require("node_helper");
 
@@ -14,20 +14,13 @@ module.exports = NodeHelper.create({
     }
   },
 
-  async fetchCalories({ backendUrl, lookbackDays }) {
+  async fetchCalories({ backendUrl }) {
     try {
-      // Calculate date range for calorie query (YYYY-MM-DD format)
-      const now = new Date();
-      const from = new Date(now.getTime() - lookbackDays * 86400 * 1000);
-      const fromStr = from.toISOString().split("T")[0];
-      const toStr = now.toISOString().split("T")[0];
-
-      // Fetch both endpoints in parallel
       const [calorieRes, weightRes] = await Promise.all([
-        fetch(`${backendUrl}/api/v1/calories/daily?from=${fromStr}&to=${toStr}`, {
+        fetch(`${backendUrl}/api/v1/calories/daily`, {
           signal: AbortSignal.timeout(5000),
         }),
-        fetch(`${backendUrl}/api/v1/weight?from=${Math.floor(from.getTime() / 1000)}`, {
+        fetch(`${backendUrl}/api/v1/weight`, {
           signal: AbortSignal.timeout(5000),
         }),
       ]);
@@ -39,7 +32,7 @@ module.exports = NodeHelper.create({
       if (weightRes.ok) {
         const weights = await weightRes.json();
         if (weights.length > 0) {
-          latestWeight = weights[0]; // already sorted desc by recordedAt
+          latestWeight = weights[0]; // sorted desc by recordedAt
         }
       }
 

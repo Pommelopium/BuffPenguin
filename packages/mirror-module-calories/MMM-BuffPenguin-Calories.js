@@ -1,25 +1,24 @@
-/* global Module, Log, Chart */
+/* global Module, Log */
 
 // MMM-BuffPenguin-Calories.js — MagicMirror² module for calorie intake vs TDEE chart.
-// Shows actual daily calorie intake as a solid line and five TDEE activity levels
-// as dashed reference lines. BMR is calculated using the Harris-Benedict revised
-// equation with the latest body weight from the backend.
+// Uses inline SVG instead of Chart.js. Shows daily calorie intake as a solid line
+// and TDEE activity levels as dashed reference lines.
 
 Module.register("MMM-BuffPenguin-Calories", {
   defaults: {
     backendUrl: "http://localhost:3000",
     updateInterval: 60 * 60 * 1000, // 1 hour
-    lookbackDays: 30,
+    maxLookbackDays: 30,            // max days back from the latest entry
     yearOfBirth: 1990,
     heightCm: 180,
     sex: "male", // "male" | "female"
   },
 
-  calorieData: null,  // array of { date, totalCalories }
-  latestWeight: null,  // latest body weight entry or null
+  calorieData: null,
+  latestWeight: null,
+  error: null,
   lastUpdated: null,
   updateTimer: null,
-  chart: null,
 
   start() {
     Log.info("MMM-BuffPenguin-Calories: Starting module");
@@ -34,7 +33,6 @@ Module.register("MMM-BuffPenguin-Calories", {
   fetchData() {
     this.sendSocketNotification("FETCH_CALORIES", {
       backendUrl: this.config.backendUrl,
-      lookbackDays: this.config.lookbackDays,
     });
   },
 
@@ -54,15 +52,23 @@ Module.register("MMM-BuffPenguin-Calories", {
 
   // Harris-Benedict revised equation
   calculateBMR(weightKg) {
-    const now = new Date();
-    const age = now.getFullYear() - this.config.yearOfBirth;
+    const age = new Date().getFullYear() - this.config.yearOfBirth;
     const h = this.config.heightCm;
-
     if (this.config.sex === "female") {
       return 447.593 + (9.247 * weightKg) + (3.098 * h) - (4.330 * age);
     }
-    // male
     return 88.362 + (13.397 * weightKg) + (4.799 * h) - (5.677 * age);
+  },
+
+  // Trim data to maxLookbackDays from the latest entry
+  trimData(data) {
+    if (!data || data.length === 0) return [];
+    const sorted = [...data].sort((a, b) => a.date.localeCompare(b.date));
+    const latestDate = new Date(sorted[sorted.length - 1].date);
+    const cutoff = new Date(latestDate);
+    cutoff.setDate(cutoff.getDate() - this.config.maxLookbackDays);
+    const cutoffStr = cutoff.toISOString().split("T")[0];
+    return sorted.filter(e => e.date >= cutoffStr);
   },
 
   getDom() {
@@ -77,7 +83,7 @@ Module.register("MMM-BuffPenguin-Calories", {
     if (this.error) {
       const msg = document.createElement("div");
       msg.className = "bpc-no-data";
-      msg.textContent = `Error: ${this.error}`;
+      msg.textContent = "Error: " + this.error;
       wrapper.appendChild(msg);
       return wrapper;
     }
@@ -85,12 +91,13 @@ Module.register("MMM-BuffPenguin-Calories", {
     if (!this.calorieData) {
       const msg = document.createElement("div");
       msg.className = "bpc-loading";
-      msg.textContent = "Loading…";
+      msg.textContent = this.translate("LOADING") || "Loading…";
       wrapper.appendChild(msg);
       return wrapper;
     }
 
-    if (this.calorieData.length === 0) {
+    const trimmed = this.trimData(this.calorieData);
+    if (trimmed.length === 0) {
       const msg = document.createElement("div");
       msg.className = "bpc-no-data";
       msg.textContent = this.translate("NO_DATA");
@@ -100,12 +107,29 @@ Module.register("MMM-BuffPenguin-Calories", {
 
     const chartWrap = document.createElement("div");
     chartWrap.className = "bpc-chart-wrap";
-    const canvas = document.createElement("canvas");
-    canvas.id = "bpc-canvas";
-    canvas.width = 400;
-    canvas.height = 220;
-    chartWrap.appendChild(canvas);
+    chartWrap.innerHTML = this.buildSvgChart(trimmed);
     wrapper.appendChild(chartWrap);
+
+    // Legend
+    if (this.latestWeight) {
+      const legend = document.createElement("div");
+      legend.className = "bpc-legend";
+      const bmr = this.calculateBMR(this.latestWeight.weightKg);
+      const levels = [
+        { factor: 1.2,   key: "SEDENTARY",        color: "#ff4444" },
+        { factor: 1.325, key: "LIGHTLY_ACTIVE",    color: "#ffaa00" },
+        { factor: 1.55,  key: "MODERATELY_ACTIVE", color: "#ffff44" },
+        { factor: 1.725, key: "VERY_ACTIVE",        color: "#88ff44" },
+        { factor: 1.9,   key: "EXTRA_ACTIVE",       color: "#44aaff" },
+      ];
+      levels.forEach(({ factor, key, color }) => {
+        const item = document.createElement("span");
+        item.className = "bpc-legend-item";
+        item.innerHTML = `<span style="color:${color}">—</span> ${this.translate(key)} (${Math.round(bmr * factor)})`;
+        legend.appendChild(item);
+      });
+      wrapper.appendChild(legend);
+    }
 
     if (this.lastUpdated) {
       const updated = document.createElement("div");
@@ -117,105 +141,86 @@ Module.register("MMM-BuffPenguin-Calories", {
       wrapper.appendChild(updated);
     }
 
-    // Defer chart creation — query canvas from live DOM to avoid stale reference
-    setTimeout(() => {
-      const liveCanvas = document.getElementById("bpc-canvas");
-      if (liveCanvas) this.renderChart(liveCanvas);
-    }, 200);
     return wrapper;
   },
 
-  renderChart(canvas) {
-    if (this.chart) {
-      this.chart.destroy();
-      this.chart = null;
-    }
+  buildSvgChart(data) {
+    const W = 400, H = 200;
+    const PAD_L = 50, PAD_R = 10, PAD_T = 10, PAD_B = 25;
+    const chartW = W - PAD_L - PAD_R;
+    const chartH = H - PAD_T - PAD_B;
 
-    const labels = this.calorieData.map(e => e.date);
-    const intakeData = this.calorieData.map(e => e.totalCalories);
+    const cals = data.map(e => e.totalCalories);
 
-    const datasets = [
-      {
-        label: this.translate("ACTUAL_INTAKE"),
-        data: intakeData,
-        borderColor: "#00ff88",
-        backgroundColor: "rgba(0, 255, 136, 0.08)",
-        borderWidth: 3,
-        pointRadius: 3,
-        pointBackgroundColor: "#00ff88",
-        fill: true,
-        tension: 0.3,
-      },
-    ];
-
-    // Add TDEE reference lines if we have weight data
+    // Include TDEE lines in min/max calculation if weight data exists
+    let allValues = [...cals];
+    let tdeeLines = [];
     if (this.latestWeight) {
       const bmr = this.calculateBMR(this.latestWeight.weightKg);
-      const levels = [
-        { factor: 1.2,   key: "SEDENTARY",         color: "#ff4444" },
-        { factor: 1.325, key: "LIGHTLY_ACTIVE",     color: "#ffaa00" },
-        { factor: 1.55,  key: "MODERATELY_ACTIVE",  color: "#ffff44" },
-        { factor: 1.725, key: "VERY_ACTIVE",         color: "#88ff44" },
-        { factor: 1.9,   key: "EXTRA_ACTIVE",        color: "#44aaff" },
-      ];
-
-      for (const { factor, key, color } of levels) {
-        const tdee = Math.round(bmr * factor);
-        datasets.push({
-          label: this.translate(key),
-          data: labels.map(() => tdee),
-          borderColor: color,
-          borderWidth: 1,
-          borderDash: [5, 5],
-          pointRadius: 0,
-          fill: false,
-          tension: 0,
-        });
-      }
+      const factors = [1.2, 1.325, 1.55, 1.725, 1.9];
+      const colors = ["#ff4444", "#ffaa00", "#ffff44", "#88ff44", "#44aaff"];
+      factors.forEach((f, i) => {
+        const val = Math.round(bmr * f);
+        allValues.push(val);
+        tdeeLines.push({ val, color: colors[i] });
+      });
     }
 
-    this.chart = new Chart(canvas, {
-      type: "line",
-      data: { labels, datasets },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: true,
-            position: "bottom",
-            labels: {
-              color: "#aaa",
-              font: { size: 9 },
-              boxWidth: 12,
-              padding: 6,
-            },
-          },
-        },
-        scales: {
-          x: {
-            ticks: { color: "#888", font: { size: 9 }, maxTicksLimit: 10 },
-            grid: { color: "rgba(255,255,255,0.05)" },
-          },
-          y: {
-            ticks: {
-              color: "#888",
-              font: { size: 9 },
-              callback: (v) => v + " kcal",
-            },
-            grid: { color: "rgba(255,255,255,0.08)" },
-          },
-        },
-      },
+    const minC = Math.floor((Math.min(...allValues) - 100) / 100) * 100;
+    const maxC = Math.ceil((Math.max(...allValues) + 100) / 100) * 100;
+    const range = maxC - minC || 1;
+
+    const toY = (val) => PAD_T + chartH - ((val - minC) / range) * chartH;
+    const toX = (i) => PAD_L + (data.length === 1 ? chartW / 2 : (i / (data.length - 1)) * chartW);
+
+    const points = data.map((e, i) => ({ x: toX(i), y: toY(e.totalCalories) }));
+    const polyline = points.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+
+    // Fill area
+    const fillPath = `M ${points[0].x.toFixed(1)},${(PAD_T + chartH).toFixed(1)} `
+      + points.map(p => `L ${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ")
+      + ` L ${points[points.length - 1].x.toFixed(1)},${(PAD_T + chartH).toFixed(1)} Z`;
+
+    // TDEE dashed lines
+    let tdeeMarkup = "";
+    tdeeLines.forEach(({ val, color }) => {
+      const y = toY(val);
+      tdeeMarkup += `<line x1="${PAD_L}" y1="${y.toFixed(1)}" x2="${W - PAD_R}" y2="${y.toFixed(1)}" stroke="${color}" stroke-width="1" stroke-dasharray="5,5"/>`;
     });
+
+    // Y-axis labels
+    const yTicks = 5;
+    let yLabels = "";
+    for (let i = 0; i <= yTicks; i++) {
+      const val = minC + (range * i / yTicks);
+      const y = PAD_T + chartH - (i / yTicks) * chartH;
+      yLabels += `<text x="${PAD_L - 5}" y="${y + 3}" text-anchor="end" fill="#888" font-size="9">${Math.round(val)}</text>`;
+      yLabels += `<line x1="${PAD_L}" y1="${y}" x2="${W - PAD_R}" y2="${y}" stroke="rgba(255,255,255,0.08)"/>`;
+    }
+
+    // X-axis labels
+    const maxXLabels = 8;
+    const step = Math.max(1, Math.floor(data.length / maxXLabels));
+    let xLabels = "";
+    for (let i = 0; i < data.length; i += step) {
+      xLabels += `<text x="${points[i].x.toFixed(1)}" y="${H - 3}" text-anchor="middle" fill="#888" font-size="9">${data[i].date.slice(5)}</text>`;
+    }
+
+    // Data points
+    const dots = points.map(p =>
+      `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="2.5" fill="#00ff88"/>`
+    ).join("");
+
+    return `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
+      ${yLabels}${xLabels}${tdeeMarkup}
+      <path d="${fillPath}" fill="rgba(0,255,136,0.08)"/>
+      <polyline points="${polyline}" fill="none" stroke="#00ff88" stroke-width="2.5"/>
+      ${dots}
+    </svg>`;
   },
 
   getStyles() {
     return ["MMM-BuffPenguin-Calories.css"];
-  },
-
-  getScripts() {
-    return ["vendor/chart.min.js"];
   },
 
   getTranslations() {
