@@ -12,7 +12,7 @@
 const NodeHelper = require("node_helper"); // external: MagicMirror² base class for server-side helpers
 const path = require("path");              // external: Node.js built-in path utilities
 const fs = require("fs");                  // external: Node.js built-in filesystem access
-const { FRONT_MUSCLE_MAP, BACK_MUSCLE_MAP, buildCompositeSvg } = require("./svg-builder");
+const { FRONT_MUSCLE_MAP, BACK_MUSCLE_MAP, buildCompositeSvg } = require("../shared/svg-builder");
 
 module.exports = NodeHelper.create({
   muscleAssets: null, // cached { front, back } SVG strings, built once on first INIT

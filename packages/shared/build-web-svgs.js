@@ -3,15 +3,15 @@
 // build-web-svgs.js — Generates composite front/back SVGs for the web app.
 // Uses the same composition logic as the MagicMirror² node_helper.
 //
-// Usage: node packages/mirror-module/build-web-svgs.js
+// Usage: node packages/shared/build-web-svgs.js
 
 const path = require("path");
 const fs = require("fs");
 const { FRONT_MUSCLE_MAP, BACK_MUSCLE_MAP, buildCompositeSvg } = require("./svg-builder");
 
-const assetsDir = path.join(__dirname, "assets");
-const frontDir = path.join(assetsDir, "front_muscles");
-const backDir = path.join(assetsDir, "back_muscles");
+const mirrorAssets = path.join(__dirname, "..", "mirror-module", "assets");
+const frontDir = path.join(mirrorAssets, "front_muscles");
+const backDir = path.join(mirrorAssets, "back_muscles");
 const outDir = path.join(__dirname, "..", "web", "assets");
 
 function readFile(filePath) {
