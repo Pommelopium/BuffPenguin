@@ -1,5 +1,7 @@
 // ExercisesView.js — Exercise list and creation form.
 
+import { MuscleOverlay } from '../helpers/MuscleOverlay.js';
+
 const FRONT_SLUGS = new Set([
   'sternocleidomastoid','pectoralis-major-upper','pectoralis-major-lower',
   'serratus-anterior','anterior-deltoid','lateral-deltoid','biceps-brachii',
@@ -18,13 +20,14 @@ export class ExercisesView {
   destroy() {}
 
   async render() {
-    const { api, state, i18n } = this.app;
+    const { api, state, i18n, muscleOverlay } = this.app;
     const t = (k, p) => i18n.t(k, p);
     const main = document.getElementById('main');
 
     try {
       if (!state.muscleGroups) state.muscleGroups = await api.getMuscleGroups();
       if (!state.exercises) state.exercises = await api.getExercises();
+      await muscleOverlay.load();
 
       const front = state.muscleGroups.filter(m => FRONT_SLUGS.has(m.slug));
       const back = state.muscleGroups.filter(m => !FRONT_SLUGS.has(m.slug));
@@ -40,7 +43,7 @@ export class ExercisesView {
       const listHtml = state.exercises.length === 0
         ? `<div class="empty">${t('exercises.noExercises')}</div>`
         : state.exercises.map(ex => `
-            <div class="ex-row">
+            <div class="ex-row" data-action="show-exercise" data-id="${ex.id}" style="cursor:pointer">
               <div class="ex-name">${ex.localizedName || ex.name}</div>
               <div class="ex-chips">
                 ${ex.muscleGroups.length
@@ -58,6 +61,7 @@ export class ExercisesView {
           </div>
           <div class="form-group">
             <label class="form-label">${t('exercises.muscleGroups')}</label>
+            ${muscleOverlay.render()}
             ${gridHtml}
           </div>
           <button class="btn btn-primary" data-action="save-exercise">${t('exercises.save')}</button>
@@ -69,6 +73,8 @@ export class ExercisesView {
         </div>`;
 
       this.bindEvents(main);
+      // Start with no muscles highlighted
+      muscleOverlay.highlight(new Set());
     } catch (err) {
       main.innerHTML = `<div class="empty"><div class="empty-icon">&#9888;&#65039;</div>${err.message}</div>`;
     }
@@ -79,7 +85,7 @@ export class ExercisesView {
     const { i18n } = this.app;
     return `
       <div class="mg-item">
-        <input type="checkbox" id="mg-${m.id}" data-id="${m.id}" data-mg-check>
+        <input type="checkbox" id="mg-${m.id}" data-id="${m.id}" data-slug="${m.slug}" data-mg-check>
         <label for="mg-${m.id}">${label}</label>
         <select class="mg-role" id="mgr-${m.id}">
           <option value="primary">${i18n.t('common.primary')}</option>
@@ -88,14 +94,61 @@ export class ExercisesView {
       </div>`;
   }
 
+  updateOverlayFromCheckboxes() {
+    const slugs = new Set();
+    document.querySelectorAll('[data-mg-check]:checked').forEach(cb => {
+      if (cb.dataset.slug) slugs.add(cb.dataset.slug);
+    });
+    this.app.muscleOverlay.highlight(slugs);
+  }
+
   bindEvents(main) {
     main.querySelector('[data-action="save-exercise"]')?.addEventListener('click', () => this.saveExercise());
     main.querySelectorAll('[data-mg-check]').forEach(cb => {
       cb.addEventListener('change', () => {
         const sel = document.getElementById(`mgr-${cb.dataset.id}`);
         if (sel) sel.style.display = cb.checked ? 'inline-block' : 'none';
+        this.updateOverlayFromCheckboxes();
       });
     });
+    main.querySelectorAll('[data-action="show-exercise"]').forEach(el => {
+      el.addEventListener('click', () => this.showExerciseMuscles(parseInt(el.dataset.id)));
+    });
+  }
+
+  showExerciseMuscles(exerciseId) {
+    const { state, muscleOverlay } = this.app;
+    const ex = state.exercises.find(e => e.id === exerciseId);
+    if (!ex) return;
+
+    // Clear checkboxes and highlight the clicked exercise's muscles
+    document.querySelectorAll('[data-mg-check]').forEach(cb => {
+      cb.checked = false;
+      const sel = document.getElementById(`mgr-${cb.dataset.id}`);
+      if (sel) sel.style.display = 'none';
+    });
+
+    const slugs = new Set();
+    for (const mg of ex.muscleGroups) {
+      slugs.add(mg.slug);
+      // Check the corresponding checkbox and set role
+      const cb = document.querySelector(`[data-mg-check][data-slug="${mg.slug}"]`);
+      if (cb) {
+        cb.checked = true;
+        const sel = document.getElementById(`mgr-${cb.dataset.id}`);
+        if (sel) {
+          sel.style.display = 'inline-block';
+          sel.value = mg.role;
+        }
+      }
+    }
+
+    muscleOverlay.highlight(slugs);
+
+    // Fill exercise name and scroll to top
+    const nameInput = document.getElementById('inp-exname');
+    if (nameInput) nameInput.value = ex.localizedName || ex.name;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   async saveExercise() {
