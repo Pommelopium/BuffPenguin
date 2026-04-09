@@ -25,6 +25,12 @@
 .bpc-chart-wrap {
   width: 400px;
   height: 220px;
+  position: relative;
+}
+
+.bpc-chart-wrap canvas {
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .bpc-updated {

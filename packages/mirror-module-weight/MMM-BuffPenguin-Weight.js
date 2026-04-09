@@ -72,6 +72,8 @@ Module.register("MMM-BuffPenguin-Weight", {
     const chartWrap = document.createElement("div");
     chartWrap.className = "bpw-chart-wrap";
     const canvas = document.createElement("canvas");
+    canvas.width = 320;
+    canvas.height = 180;
     chartWrap.appendChild(canvas);
     wrapper.appendChild(chartWrap);
 
@@ -86,7 +88,7 @@ Module.register("MMM-BuffPenguin-Weight", {
     }
 
     // Defer chart creation until canvas is in the DOM
-    setTimeout(() => this.renderChart(canvas), 0);
+    setTimeout(() => this.renderChart(canvas), 100);
 
     return wrapper;
   },

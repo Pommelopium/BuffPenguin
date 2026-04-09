@@ -25,6 +25,12 @@
 .bpw-chart-wrap {
   width: 320px;
   height: 180px;
+  position: relative;
+}
+
+.bpw-chart-wrap canvas {
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .bpw-updated {
