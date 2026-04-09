@@ -101,6 +101,7 @@ Module.register("MMM-BuffPenguin-Calories", {
     const chartWrap = document.createElement("div");
     chartWrap.className = "bpc-chart-wrap";
     const canvas = document.createElement("canvas");
+    canvas.id = "bpc-canvas";
     canvas.width = 400;
     canvas.height = 220;
     chartWrap.appendChild(canvas);
@@ -116,7 +117,11 @@ Module.register("MMM-BuffPenguin-Calories", {
       wrapper.appendChild(updated);
     }
 
-    setTimeout(() => this.renderChart(canvas), 100);
+    // Defer chart creation — query canvas from live DOM to avoid stale reference
+    setTimeout(() => {
+      const liveCanvas = document.getElementById("bpc-canvas");
+      if (liveCanvas) this.renderChart(liveCanvas);
+    }, 200);
     return wrapper;
   },
 

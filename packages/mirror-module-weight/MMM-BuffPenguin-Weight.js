@@ -72,6 +72,7 @@ Module.register("MMM-BuffPenguin-Weight", {
     const chartWrap = document.createElement("div");
     chartWrap.className = "bpw-chart-wrap";
     const canvas = document.createElement("canvas");
+    canvas.id = "bpw-canvas";
     canvas.width = 320;
     canvas.height = 180;
     chartWrap.appendChild(canvas);
@@ -87,8 +88,11 @@ Module.register("MMM-BuffPenguin-Weight", {
       wrapper.appendChild(updated);
     }
 
-    // Defer chart creation until canvas is in the DOM
-    setTimeout(() => this.renderChart(canvas), 100);
+    // Defer chart creation — query canvas from live DOM to avoid stale reference
+    setTimeout(() => {
+      const liveCanvas = document.getElementById("bpw-canvas");
+      if (liveCanvas) this.renderChart(liveCanvas);
+    }, 200);
 
     return wrapper;
   },
