@@ -9,7 +9,7 @@ const path = require("path");
 const fs = require("fs");
 const { FRONT_MUSCLE_MAP, BACK_MUSCLE_MAP, buildCompositeSvg } = require("./svg-builder");
 
-const mirrorAssets = path.join(__dirname, "..", "mirror-module", "assets");
+const mirrorAssets = path.join(__dirname, "assets");
 const frontDir = path.join(mirrorAssets, "front_muscles");
 const backDir = path.join(mirrorAssets, "back_muscles");
 const outDir = path.join(__dirname, "..", "web", "assets");

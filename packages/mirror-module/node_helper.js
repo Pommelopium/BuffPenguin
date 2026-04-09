@@ -34,7 +34,7 @@ module.exports = NodeHelper.create({
   // Reads all asset files and builds the front and back composite SVGs.
   // Returns { front: string, back: string } or null on critical error.
   loadMuscleAssets() {
-    const assetsDir = path.join(__dirname, "assets");
+    const assetsDir = path.join(__dirname, "..", "shared", "assets");
     const frontDir = path.join(assetsDir, "front_muscles");
     const backDir = path.join(assetsDir, "back_muscles");
 
