@@ -64,7 +64,10 @@ export class ExercisesView {
             ${muscleOverlay.render()}
             ${gridHtml}
           </div>
-          <button class="btn btn-primary" data-action="save-exercise">${t('exercises.save')}</button>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-secondary" data-action="reset-exercise">${t('exercises.reset')}</button>
+            <button class="btn btn-primary" data-action="save-exercise">${t('exercises.save')}</button>
+          </div>
         </div>
 
         <div class="card">
@@ -103,6 +106,7 @@ export class ExercisesView {
   }
 
   bindEvents(main) {
+    main.querySelector('[data-action="reset-exercise"]')?.addEventListener('click', () => this.resetForm());
     main.querySelector('[data-action="save-exercise"]')?.addEventListener('click', () => this.saveExercise());
     main.querySelectorAll('[data-mg-check]').forEach(cb => {
       cb.addEventListener('change', () => {
@@ -149,6 +153,17 @@ export class ExercisesView {
     const nameInput = document.getElementById('inp-exname');
     if (nameInput) nameInput.value = ex.localizedName || ex.name;
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  resetForm() {
+    const nameInput = document.getElementById('inp-exname');
+    if (nameInput) nameInput.value = '';
+    document.querySelectorAll('[data-mg-check]').forEach(cb => {
+      cb.checked = false;
+      const sel = document.getElementById(`mgr-${cb.dataset.id}`);
+      if (sel) sel.style.display = 'none';
+    });
+    this.app.muscleOverlay.highlight(new Set());
   }
 
   async saveExercise() {

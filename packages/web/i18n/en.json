@@ -28,6 +28,7 @@
   "exercises.name": "Name",
   "exercises.namePlaceholder": "e.g. Barbell Squat",
   "exercises.muscleGroups": "Muscle Groups",
+  "exercises.reset": "Reset",
   "exercises.save": "Save Exercise",
   "exercises.allExercises": "All Exercises ({n})",
   "exercises.noExercises": "No exercises yet.",
