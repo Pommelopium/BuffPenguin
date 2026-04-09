@@ -2,6 +2,14 @@
 // Used by both node_helper.js (MagicMirror²) and build-web-svgs.js (web app build).
 
 // Maps SVG filenames in front_muscles/each_muscle_group_separate/ to API slugs.
+// Missing front slugs (no SVG file available):
+//   - pectoralis-major-lower
+//   - lateral-deltoid
+//   - internal-obliques
+//   - transversus-abdominis
+//   - iliopsoas
+//   - adductor-magnus (front view)
+//   - tibialis-anterior
 const FRONT_MUSCLE_MAP = [
   { file: "Adductor Longus and Pectineus.svg", slug: "adductor-longus"        },
   { file: "Biceps brachii.svg",                slug: "biceps-brachii"          },
@@ -29,6 +37,17 @@ const FRONT_MUSCLE_MAP = [
 ];
 
 // Maps SVG filenames in back_muscles/each_muscle_group_separate/ to API slugs.
+// Missing back slugs (no SVG file available):
+//   - middle-trapezius
+//   - teres-minor
+//   - subscapularis
+//   - triceps-lateral-head (back view)
+//   - multifidus
+//   - quadratus-lumborum
+//   - gluteus-minimus
+//   - piriformis
+//   - semimembranosus
+//   - soleus (back view)
 const BACK_MUSCLE_MAP = [
   { file: "Adductor magnus.svg",                             slug: "adductor-magnus"      },
   { file: "Biceps fermoris.svg",                             slug: "biceps-femoris"        },
