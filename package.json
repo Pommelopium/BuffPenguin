@@ -11,7 +11,8 @@
   "scripts": {
     "build": "npm run build --workspace=packages/backend",
     "dev": "npm run dev --workspace=packages/backend",
-    "lint": "npm run lint --workspaces --if-present"
+    "lint": "npm run lint --workspaces --if-present",
+    "build:svgs": "node packages/mirror-module/build-web-svgs.js"
   },
   "devDependencies": {
     "typescript": "^5.4.0",

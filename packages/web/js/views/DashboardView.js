@@ -1,6 +1,7 @@
 // DashboardView.js — Dashboard, session management, and set logging.
 
 import { fmtDate, fmtTime, fmtDuration, elapsed } from '../helpers/formatting.js';
+import { MuscleOverlay } from '../helpers/MuscleOverlay.js';
 
 export class DashboardView {
   constructor(app) {
@@ -120,16 +121,19 @@ export class DashboardView {
       state.session.sets = fresh.sets;
     } catch (_) { /* use cached */ }
 
-    this.renderSession();
+    await this.renderSession();
   }
 
-  renderSession() {
-    const { state, i18n } = this.app;
+  async renderSession() {
+    const { state, i18n, muscleOverlay } = this.app;
     const t = (k, p) => i18n.t(k, p);
     const main = document.getElementById('main');
     const ses = state.session;
     const exs = state.exercises || [];
     const exMap = Object.fromEntries(exs.map(e => [e.id, e.localizedName || e.name]));
+
+    await muscleOverlay.load();
+    const activeSlugs = MuscleOverlay.getSessionMuscles(ses.sets, exs);
 
     const setsBody = ses.sets.length === 0
       ? `<tr><td colspan="5" class="text-muted" style="padding:12px 0">${t('session.noSetsYet')}</td></tr>`
@@ -153,6 +157,11 @@ export class DashboardView {
           <div class="timer" id="ses-timer">${elapsed(ses.startedAt)}</div>
         </div>
         <button class="btn btn-ghost" data-action="back-dash">&#8592; ${t('common.back')}</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">${t('session.musclesWorked')}</div>
+        ${muscleOverlay.render()}
       </div>
 
       <div class="card">
@@ -199,6 +208,8 @@ export class DashboardView {
       el.addEventListener('click', () => this.removeSet(parseInt(el.dataset.id)));
     });
 
+    muscleOverlay.highlight(activeSlugs);
+
     state.timerHandle = setInterval(() => {
       const el = document.getElementById('ses-timer');
       if (el && document.contains(el)) el.textContent = elapsed(ses.startedAt);
@@ -240,7 +251,7 @@ export class DashboardView {
       });
       state.session.sets.push(set);
       this.app.toast(i18n.t('toast.setLogged', { n: setNum }));
-      this.renderSession();
+      await this.renderSession();
     } catch (err) {
       this.app.toast(err.message, 'err');
       btn.disabled = false; btn.textContent = i18n.t('session.logSet');
@@ -254,7 +265,7 @@ export class DashboardView {
       await api.delSet(state.session.id, setId);
       state.session.sets = state.session.sets.filter(s => s.id !== setId);
       this.app.toast(i18n.t('toast.setRemoved'));
-      this.renderSession();
+      await this.renderSession();
     } catch (err) {
       this.app.toast(err.message, 'err');
     }
@@ -281,13 +292,16 @@ export class DashboardView {
   }
 
   async viewSession(id) {
-    const { api, state, i18n } = this.app;
+    const { api, state, i18n, muscleOverlay } = this.app;
     const t = (k, p) => i18n.t(k, p);
     const main = document.getElementById('main');
     try {
       const s = await api.getSession(id);
       if (!state.exercises) state.exercises = await api.getExercises();
       const exMap = Object.fromEntries(state.exercises.map(e => [e.id, e.localizedName || e.name]));
+
+      await muscleOverlay.load();
+      const activeSlugs = MuscleOverlay.getSessionMuscles(s.sets, state.exercises);
 
       const grouped = {};
       for (const set of s.sets) {
@@ -305,6 +319,11 @@ export class DashboardView {
             <div><div class="form-label">Sets</div><strong>${s.sets.length}</strong></div>
           </div>
           ${s.notes ? `<p class="text-muted" style="margin-top:10px">${s.notes}</p>` : ''}
+        </div>
+
+        <div class="card">
+          <div class="card-title">${t('session.musclesWorked')}</div>
+          ${muscleOverlay.render()}
         </div>`;
 
       for (const [name, sets] of Object.entries(grouped)) {
@@ -324,6 +343,7 @@ export class DashboardView {
       }
 
       main.innerHTML = html;
+      muscleOverlay.highlight(activeSlugs);
       main.querySelector('[data-action="back-dash"]')?.addEventListener('click', () => this.render());
     } catch (err) {
       this.app.toast(err.message, 'err');

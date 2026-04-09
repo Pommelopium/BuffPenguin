@@ -2,6 +2,7 @@
 
 import { ApiClient } from './ApiClient.js';
 import { I18n } from './I18n.js';
+import { MuscleOverlay } from './helpers/MuscleOverlay.js';
 import { DashboardView } from './views/DashboardView.js';
 import { ExercisesView } from './views/ExercisesView.js';
 import { SettingsView } from './views/SettingsView.js';
@@ -12,6 +13,7 @@ export class App {
   constructor() {
     this.i18n = new I18n();
     this.api = new ApiClient(this.i18n);
+    this.muscleOverlay = new MuscleOverlay();
     this.state = {
       exercises: null,
       muscleGroups: null,

@@ -189,6 +189,14 @@ code { font-family: monospace; font-size: 0.85em; }
 .toast.ok  { border-color: var(--accent); color: var(--accent); }
 .toast.err { border-color: var(--danger); color: var(--danger); }
 
+/* ── Muscle SVG overlay ────────────────────────────────── */
+.bp-figures { display: flex; gap: 16px; justify-content: center; align-items: flex-start; margin: 8px 0; }
+.bp-figure-wrap { display: flex; }
+.bp-anatomy-svg { width: 140px; height: auto; }
+.bp-outline { fill: rgba(255,255,255,0.2); stroke: rgba(255,255,255,0.4); stroke-width: 1.5; }
+.muscle-region { fill: transparent; opacity: 0.75; transition: fill 0.4s ease; }
+.muscle-region.active-session { fill: var(--accent); }
+
 /* ── Responsive ─────────────────────────────────────────── */
 @media (max-width: 480px) {
   .app-header { padding: 0 12px; }
@@ -196,4 +204,5 @@ code { font-family: monospace; font-size: 0.85em; }
   .form-row   { grid-template-columns: 1fr; }
   .muscle-grid { grid-template-columns: 1fr; }
   .nav-btn    { padding: 6px 8px; }
+  .bp-anatomy-svg { width: 110px; }
 }
